@@ -4,7 +4,7 @@
    说明: 该文件定义了车辆抓拍请求模型，包含设备 ID、序列号、抓拍时间和车辆数据等信息。
 
 */
-namespace Yuexintu.SDK.RequestAndResponse;
+namespace Yuexintu.SDK.RequestAndResponse.Http;
 
 /// <summary>
 /// 车辆抓拍请求模型

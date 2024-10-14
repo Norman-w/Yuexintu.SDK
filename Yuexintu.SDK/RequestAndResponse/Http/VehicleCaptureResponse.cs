@@ -6,7 +6,7 @@
 
 
 */
-namespace Yuexintu.SDK.RequestAndResponse;
+namespace Yuexintu.SDK.RequestAndResponse.Http;
 
 /// <summary>
 /// 车辆抓拍响应模型

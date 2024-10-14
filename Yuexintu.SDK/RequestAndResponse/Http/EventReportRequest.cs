@@ -4,7 +4,7 @@
    说明: 该文件定义了事件上报请求模型，包含设备 ID、事件类型、事件发生时间和事件数据等信息。
 
 */
-namespace Yuexintu.SDK.RequestAndResponse;
+namespace Yuexintu.SDK.RequestAndResponse.Http;
 
 /// <summary>
 /// 事件上报请求模型

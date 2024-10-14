@@ -4,7 +4,7 @@
    说明: 该文件定义了人脸抓拍请求模型，包含设备 ID、抓拍时间、年龄、性别、人脸 ID、姓名和人脸数据等信息。
 
 */
-namespace Yuexintu.SDK.RequestAndResponse;
+namespace Yuexintu.SDK.RequestAndResponse.Http;
 
 /// <summary>
 /// 人脸抓拍请求模型

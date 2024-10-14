@@ -8,7 +8,7 @@
 */
 
 
-namespace Yuexintu.SDK;
+namespace Yuexintu.SDK.RequestAndResponse.Http;
 
 /// <summary>
 /// 人脸抓拍响应模型

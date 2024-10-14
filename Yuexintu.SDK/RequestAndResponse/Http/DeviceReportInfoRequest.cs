@@ -6,7 +6,7 @@
 
 
 */
-namespace Yuexintu.SDK.RequestAndResponse;
+namespace Yuexintu.SDK.RequestAndResponse.Http;
 
 /// <summary>
 /// 设备信息上报请求模型
