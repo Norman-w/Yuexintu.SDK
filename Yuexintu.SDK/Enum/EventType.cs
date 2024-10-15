@@ -1,4 +1,4 @@
-namespace Yuexintu.SDK;
+namespace Yuexintu.SDK.Enum;
 
 /// <summary>
 /// 事件类型枚举

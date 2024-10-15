@@ -1,4 +1,4 @@
-namespace Yuexintu.SDK;
+namespace Yuexintu.SDK.Enum;
 
 /// <summary>
 /// 车辆类型枚举

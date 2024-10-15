@@ -1,4 +1,4 @@
-namespace Yuexintu.SDK;
+namespace Yuexintu.SDK.Model;
 
 /// <summary>
 /// 矩形结构体，表示位置和尺寸
