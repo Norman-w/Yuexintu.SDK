@@ -14,7 +14,7 @@ sln下的每个csproj均以Yuexintu.xxx的方式命名.比如本项目名称为Y
 ## Next
 * 增加错误码定义 ✅
 * 抽象模型
-* 实现Client
+* 实现Server
 * 实现Setting
 * 单元测试项目构建
 * 硬件模拟器项目搭建
