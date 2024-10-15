@@ -12,7 +12,7 @@ sln下的每个csproj均以Yuexintu.xxx的方式命名.比如本项目名称为Y
 原始docx文档的md转译版本从参考 [Yuexintu.SDK/第三方平台设备对接协议规范_20240906.md](./第三方平台设备对接协议规范_20240906.md) .
 
 ## Next
-* 增加错误码定义
+* 增加错误码定义 ✅
 * 抽象模型
 * 实现Client
 * 实现Setting
