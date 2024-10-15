@@ -18,4 +18,5 @@ sln下的每个csproj均以Yuexintu.xxx的方式命名.比如本项目名称为Y
 * 实现Setting
 * 单元测试项目构建
 * 硬件模拟器项目搭建 ▶️
+  * 增加模拟器的HTTP部分README 到[../Yuexintu.Simulator/README.md](../Yuexintu.Simulator/README.md)
 * MPV Demo项目搭建
