@@ -14,9 +14,13 @@ sln下的每个csproj均以Yuexintu.xxx的方式命名.比如本项目名称为Y
 ## Next
 * 增加错误码定义 ✅
 * 抽象模型
-* 实现Server
+* 实现Server ▶️
+  * 服务端接收到的请求载荷的接口
+  * 服务端消息事件定义(收到消息)
+  * 通用服务端内核搭建(用于内部逻辑处理,目标为可接受来自各种协议(来源)的消息请求)
+  * Asp.Net服务端搭建(只负责消息接收和向内核传递消息)
+  * Asp.Net服务端与通用服务端内核对接(消息传递,推入内核)
 * 实现Setting
 * 单元测试项目构建
 * 硬件模拟器项目搭建 ▶️
-  * 增加模拟器的HTTP部分README 到[../Yuexintu.Simulator/README.md](../Yuexintu.Simulator/README.md)
 * MPV Demo项目搭建
