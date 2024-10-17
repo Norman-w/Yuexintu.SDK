@@ -3,13 +3,8 @@ namespace Yuexintu.SDK.RequestAndResponse.WebSocket;
 /// <summary>
 /// 录像设置请求载荷
 /// </summary>
-public class VideoSettingsRequestPayload
+public class VideoSettingsRequestPayload : WebSocketRequestPayload
 {
-	/// <summary>
-	/// 消息ID
-	/// </summary>
-	public string Msgid { get; set; }
-
 	/// <summary>
 	/// 数据部分
 	/// </summary>

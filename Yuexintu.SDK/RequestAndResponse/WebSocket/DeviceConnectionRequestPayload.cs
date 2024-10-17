@@ -3,13 +3,8 @@ namespace Yuexintu.SDK.RequestAndResponse.WebSocket;
 /// <summary>
 /// 设备连接请求载荷
 /// </summary>
-public class DeviceConnectionRequestPayload
+public class DeviceConnectionRequestPayload : WebSocketRequestPayload
 {
-    /// <summary>
-    /// 消息ID
-    /// </summary>
-    public string Msgid { get; set; }
-
     /// <summary>
     /// 数据部分
     /// </summary>

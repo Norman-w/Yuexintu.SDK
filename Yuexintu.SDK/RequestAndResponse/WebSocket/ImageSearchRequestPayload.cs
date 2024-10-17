@@ -3,13 +3,8 @@ namespace Yuexintu.SDK.RequestAndResponse.WebSocket;
 /// <summary>
 /// 以图搜图请求载荷
 /// </summary>
-public class ImageSearchRequestPayload
+public class ImageSearchRequestPayload : WebSocketRequestPayload
 {
-	/// <summary>
-	/// 消息ID
-	/// </summary>
-	public string Msgid { get; set; }
-
 	/// <summary>
 	/// 数据部分
 	/// </summary>

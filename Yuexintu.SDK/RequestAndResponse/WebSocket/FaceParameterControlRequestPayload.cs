@@ -3,13 +3,8 @@ namespace Yuexintu.SDK.RequestAndResponse.WebSocket;
 /// <summary>
 /// 人脸参数控制请求载荷
 /// </summary>
-public class FaceParameterControlRequestPayload
+public class FaceParameterControlRequestPayload : WebSocketRequestPayload
 {
-	/// <summary>
-	/// 消息ID
-	/// </summary>
-	public string Msgid { get; set; }
-
 	/// <summary>
 	/// 数据部分
 	/// </summary>
