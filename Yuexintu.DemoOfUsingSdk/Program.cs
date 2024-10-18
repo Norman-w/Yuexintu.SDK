@@ -52,6 +52,12 @@ netMessageProcessor.OnWebSocketRequestPackageReceived += payload =>
 					}
 				}
 			};
+			
+			Console.ForegroundColor = ConsoleColor.Magenta;
+			Console.WriteLine($"返回给摄像机的消息: {response.Data.Code} - {response.Data.Msg}");
+			Console.ResetColor();
+			
+			return response;
 
 			#endregion
 		}
@@ -64,6 +70,8 @@ netMessageProcessor.OnWebSocketRequestPackageReceived += payload =>
 	}
 
 	#endregion
+
+	return WebSocketResponsePackage.Empty;
 };
 var netFacade = new NetFacade();
 netFacade.Start();
@@ -84,7 +92,10 @@ netFacade.SessionCreatedAsync += async session =>
 	client.OnRequestReceived += (sender, message) =>
 	{
 		// Console.WriteLine($"接收到客户端消息: {message}");
-		netMessageProcessor.ProcessMessage(message);
+		netMessageProcessor.ProcessMessage(message, response =>
+		{
+			client.Send(response);
+		});
 	};
 	client.ClientDisconnected += (c) => { Console.WriteLine($"报告者客户端断开连接: {c}"); };
 	await client.StartWorking();

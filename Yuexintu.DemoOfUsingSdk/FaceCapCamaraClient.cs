@@ -111,4 +111,10 @@ public class FaceCapCamaraClient : IClient
 	}
 	public delegate void RequestReceivedEventHandler(FaceCapCamaraClient sender, string message);
 	public event RequestReceivedEventHandler? OnRequestReceived;
+
+	public void Send(string message)
+	{
+		var buffer = Encoding.UTF8.GetBytes(message);
+		_webSocket.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Text, true, CancellationToken.None);
+	}
 }

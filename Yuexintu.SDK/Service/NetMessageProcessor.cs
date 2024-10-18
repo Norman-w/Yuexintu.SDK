@@ -32,14 +32,15 @@ public class NetMessageProcessor
 		return dic;
 	}
 
-	public delegate void WebSocketRequestPackageReceivedEventHandler(RequestAndResponse.WebSocket.WebSocketRequestPackage iWebSocketRequestPackage);
+	public delegate WebSocketResponsePackage WebSocketRequestPackageReceivedEventHandler(WebSocketRequestPackage iWebSocketRequestPackage);
 	public event WebSocketRequestPackageReceivedEventHandler? OnWebSocketRequestPackageReceived;
 
 	/// <summary>
 	/// 处理从http/websocket收到的文本消息,如果消息被正确解析,将会通过OnWebSocketRequestReceived事件传递出去.
 	/// </summary>
 	/// <param name="message"></param>
-	public void ProcessMessage(string message)
+	/// <param name="returnMessageAction">当需要给客户端返回消息时,调用这个委托</param>
+	public void ProcessMessage(string message, Action<string> returnMessageAction)
 	{
 		if(string.IsNullOrEmpty(message))
 		{
@@ -83,6 +84,11 @@ public class NetMessageProcessor
 		//使用json填充
 		JsonConvert.PopulateObject(message, instance);
 		//触发事件
-		OnWebSocketRequestPackageReceived?.Invoke(instance);
+		var responsePackage = OnWebSocketRequestPackageReceived?.Invoke(instance);
+		var responseJson = JsonConvert.SerializeObject(responsePackage);
+		if (responsePackage != null)
+		{
+			returnMessageAction(responseJson);
+		}
 	}
 }
