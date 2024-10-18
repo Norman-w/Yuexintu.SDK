@@ -1,9 +1,9 @@
 namespace Yuexintu.SDK.RequestAndResponse.WebSocket;
 
 /// <summary>
-/// 设备心跳响应载荷
+/// 抓拍图像文件列表响应载荷
 /// </summary>
-public class DeviceHeartbeatResponsePayload
+public class CaptureImageFileListResponsePackage
 {
 	/// <summary>
 	/// 错误码

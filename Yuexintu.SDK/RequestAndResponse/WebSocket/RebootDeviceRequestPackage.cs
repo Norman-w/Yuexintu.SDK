@@ -96,7 +96,7 @@ namespace Yuexintu.SDK.RequestAndResponse.WebSocket;
 /// <summary>
 /// 重启设备请求载荷
 /// </summary>
-public class RebootDeviceRequestPayload : WebSocketRequestPayload
+public class RebootDeviceRequestPackage : WebSocketRequestPackage
 {
 	private const string Uri = "/system/maintain/reboot";
 	/// <summary>
@@ -110,7 +110,7 @@ public class RebootDeviceRequestPayload : WebSocketRequestPayload
 	/// </summary>
 	public class DataModel
 	{
-		public string Uri => RebootDeviceRequestPayload.Uri;
+		public string Uri => RebootDeviceRequestPackage.Uri;
 		public ParamModel Param { get; set; }
 		public class ParamModel
 		{

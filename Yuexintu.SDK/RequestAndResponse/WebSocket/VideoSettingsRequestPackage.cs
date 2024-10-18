@@ -158,7 +158,7 @@ namespace Yuexintu.SDK.RequestAndResponse.WebSocket;
 /// <summary>
 /// 录像设置请求载荷
 /// </summary>
-public class VideoSettingsRequestPayload : WebSocketRequestPayload
+public class VideoSettingsRequestPackage : WebSocketRequestPackage
 {
 	private const string Uri = "/storage/record_set";
 	/// <summary>
@@ -170,7 +170,7 @@ public class VideoSettingsRequestPayload : WebSocketRequestPayload
 	
 	public class DataModel
 	{
-		public string Uri { get; set; } = VideoSettingsRequestPayload.Uri;
+		public string Uri { get; set; } = VideoSettingsRequestPackage.Uri;
 		/// <summary>
 		/// 手动录像
 		/// </summary>

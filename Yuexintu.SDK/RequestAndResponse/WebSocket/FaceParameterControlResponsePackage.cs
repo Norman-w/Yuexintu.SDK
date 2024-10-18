@@ -1,9 +1,9 @@
 namespace Yuexintu.SDK.RequestAndResponse.WebSocket;
 
 /// <summary>
-/// 人员列表响应载荷
+/// 人脸参数控制响应载荷
 /// </summary>
-public class PersonListResponsePayload
+public class FaceParameterControlResponsePackage
 {
 	/// <summary>
 	/// 错误码

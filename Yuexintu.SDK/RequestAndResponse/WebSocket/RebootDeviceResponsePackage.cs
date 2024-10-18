@@ -1,9 +1,9 @@
 namespace Yuexintu.SDK.RequestAndResponse.WebSocket;
 
 /// <summary>
-/// 抓拍图像文件列表响应载荷
+/// 重启设备响应载荷
 /// </summary>
-public class CaptureImageFileListResponsePayload
+public class RebootDeviceResponsePackage
 {
 	/// <summary>
 	/// 错误码

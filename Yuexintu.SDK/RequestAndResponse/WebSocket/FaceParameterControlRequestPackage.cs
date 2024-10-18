@@ -250,7 +250,7 @@ namespace Yuexintu.SDK.RequestAndResponse.WebSocket;
 /// <summary>
 /// 人脸参数控制请求载荷
 /// </summary>
-public class FaceParameterControlRequestPayload : WebSocketRequestPayload
+public class FaceParameterControlRequestPackage : WebSocketRequestPackage
 {
 	private const string Uri = "/ivp/facecap_param_set";
 

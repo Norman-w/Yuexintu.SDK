@@ -3,7 +3,7 @@ namespace Yuexintu.SDK.RequestAndResponse.WebSocket;
 /// <summary>
 /// 每日视频文件数量响应载荷
 /// </summary>
-public class DailyVideoFileCountResponsePayload
+public class DailyVideoFileCountResponsePackage
 {
 	/// <summary>
 	/// 错误码

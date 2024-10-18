@@ -155,7 +155,7 @@ namespace Yuexintu.SDK.RequestAndResponse.WebSocket;
 /// <summary>
 /// 设备连接请求载荷
 /// </summary>
-public class DeviceConnectionRequestPayload : WebSocketRequestPayload
+public class DeviceConnectionRequestPackage : WebSocketRequestPackage
 {
     private const string Uri = "/connect";
     /// <summary>
@@ -171,7 +171,7 @@ public class DeviceConnectionRequestPayload : WebSocketRequestPayload
         /// <summary>
         /// 请求的URI
         /// </summary>
-        public string Uri => DeviceConnectionRequestPayload.Uri;
+        public string Uri => DeviceConnectionRequestPackage.Uri;
 
         /// <summary>
         /// 参数部分

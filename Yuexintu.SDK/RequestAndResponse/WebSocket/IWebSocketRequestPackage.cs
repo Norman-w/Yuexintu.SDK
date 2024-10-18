@@ -1,6 +1,6 @@
 namespace Yuexintu.SDK.RequestAndResponse.WebSocket;
 
-public interface IWebSocketRequestPayload
+public interface IWebSocketRequestPackage
 {
 	string GetUri();
 }

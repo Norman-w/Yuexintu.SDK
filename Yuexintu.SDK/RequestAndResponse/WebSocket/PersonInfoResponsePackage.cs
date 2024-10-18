@@ -3,7 +3,7 @@ namespace Yuexintu.SDK.RequestAndResponse.WebSocket;
 /// <summary>
 /// 人员信息响应载荷
 /// </summary>
-public class PersonInfoResponsePayload
+public class PersonInfoResponsePackage
 {
 	/// <summary>
 	/// 错误码

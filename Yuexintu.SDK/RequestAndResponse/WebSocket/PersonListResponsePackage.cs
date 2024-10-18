@@ -1,9 +1,9 @@
 namespace Yuexintu.SDK.RequestAndResponse.WebSocket;
 
 /// <summary>
-/// 删除人员信息响应载荷
+/// 人员列表响应载荷
 /// </summary>
-public class DeletePersonInfoResponsePayload
+public class PersonListResponsePackage
 {
 	/// <summary>
 	/// 错误码

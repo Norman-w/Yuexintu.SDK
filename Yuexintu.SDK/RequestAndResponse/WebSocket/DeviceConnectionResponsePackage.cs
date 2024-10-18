@@ -5,7 +5,7 @@ namespace Yuexintu.SDK.RequestAndResponse.WebSocket;
 /// <summary>
 /// 设备连接响应载荷
 /// </summary>
-public class DeviceConnectionResponsePayload
+public class DeviceConnectionResponsePackage
 {
 	/// <summary>
 	/// 消息ID

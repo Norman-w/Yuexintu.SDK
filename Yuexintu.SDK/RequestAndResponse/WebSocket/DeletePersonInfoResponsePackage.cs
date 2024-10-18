@@ -1,9 +1,9 @@
 namespace Yuexintu.SDK.RequestAndResponse.WebSocket;
 
 /// <summary>
-/// 录像设置响应载荷
+/// 删除人员信息响应载荷
 /// </summary>
-public class VideoSettingsResponsePayload
+public class DeletePersonInfoResponsePackage
 {
 	/// <summary>
 	/// 错误码

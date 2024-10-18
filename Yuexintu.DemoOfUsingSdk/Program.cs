@@ -25,7 +25,7 @@ netMessageProcessor.OnWebSocketRequestPackageReceived += payload =>
 
 	#region 处理摄像机发过来的请求
 
-	if (payload is DeviceConnectionRequestPayload deviceConnectionRequestPayload)
+	if (payload is DeviceConnectionRequestPackage deviceConnectionRequestPayload)
 	{
 		Console.WriteLine($"摄像机连接请求, SN: {deviceConnectionRequestPayload.Data.Param.Sn}");
 		if (string.IsNullOrEmpty(deviceConnectionRequestPayload.Data.Param.Did))
@@ -36,15 +36,15 @@ netMessageProcessor.OnWebSocketRequestPackageReceived += payload =>
 
 			#region 发送421错误返回给摄像机
 
-			var response = new DeviceConnectionResponsePayload()
+			var response = new DeviceConnectionResponsePackage()
 			{
 				MsgId = deviceConnectionRequestPayload.MsgId,
-				Data = new DeviceConnectionResponsePayload.DataModel()
+				Data = new DeviceConnectionResponsePackage.DataModel()
 				{
 					//uri 不需要设置
 					Msg = "Did为空,无法连接",
 					Code = ErrorCode.DeviceNotRegistered,
-					Result = new DeviceConnectionResponsePayload.DataModel.ResultModel()
+					Result = new DeviceConnectionResponsePackage.DataModel.ResultModel()
 					{
 						Token = string.Empty,
 						Expire = 0,

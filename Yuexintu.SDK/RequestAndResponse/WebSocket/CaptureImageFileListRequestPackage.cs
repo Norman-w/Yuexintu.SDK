@@ -1,19 +1,19 @@
 /*
  
  
- 
- 1.13 查询人员列表
-   服务器查询人员列表，
+ 1.10 查询抓拍图像的文件列表
+   服务器查询抓拍文件列表，
    {
    "msgid": "adfdgwrt245356",
    "token"："adf4453456ghhjgsf23546y",
    "data": {
-   "uri"："/person/list",
+   "uri"："/ivp/face/get_cap_history",
    "param": {
-   "page_num":1,
-   "page_size":32,
-   "category":1,
-   "name":"张三",
+   "start_time": "2021-10-03 10:30:00",
+   "end_time": "2021-10-03 16:00:00",
+   "page_num": 1,
+   "page_size": 32,
+   "name": "张三",
    "workId":"10091",
    "idCard":"xxxxxxxxxxxxxxxxxx",
    "phone":"136xxxxxxxx"
@@ -41,7 +41,7 @@
     
    uri
    字符串
-   固定为"person/list"
+   固定为"ivp/face/get_cap_history"
    是
     
    param
@@ -50,33 +50,15 @@
    是
     
     
-   name
+   start_time
    字符串
-   姓名
+   起始时间，格式为：yyyy-MM-dd HH:mm:ss
    是
     
     
-   workId
+   end_time
    字符串
-   工号
-   是
-    
-    
-   idCard
-   字符串
-   身份证号
-   是
-    
-    
-   phone
-   整型
-   手机号
-   是
-    
-    
-   category
-   整型
-   类别，1:白名单；2:黑名单；3:VIP；4:访客
+   结束时间，格式为：yyyy-MM-dd HH:mm:ss
    是
     
     
@@ -92,28 +74,49 @@
    是
     
     
+   name
+   字符串
+   指定姓名
+   否
+    
+    
+   workId
+   字符串
+   指定工号
+   否
+    
+    
+   idCard
+   字符串
+   指定身份证号
+   否
+    
+    
+   phone
+   字符串
+   指定手机号
+   否
+    
+    
    响应
    {
    "msgid": "adfdgwrt245356",
    "data": {
-   "uri": "/person/list",
+   "uri": "/ivp/face/get_cap_history",
    "code": 0,
    "msg": "OK",
    "result": {
-   "total": 916,
-   "list": [
+   "face_total":916,
+   "face_list": [
    {
-   "pid":"123456",
-   "name": "张三",
-   "work_id": "123457089",
-   "id_card_no": "",
-   "ic_card_no": "",
-   "department": "测试部",
-   "photo": "data/facelib/19017.jpg",
-   "phone": "",
+   "name":"张三",
+   "similarity": 80,
    "gender": 2,
    "age": 27,
-   "category": 1
+   "time":"2022-09-24 14:27:41",
+   "jpeg_url_face":"sdcard/20210924/14/2741_179.jpg",
+   "jpeg_url_body":"sdcard/20210924/14/2741_179_body.jpg",
+   "jpeg_url_frame":"sdcard/20220924/14/2741_179_bg.jpg",
    },
    ...
    ]
@@ -136,7 +139,7 @@
     
    uri
    字符串
-   固定为"person/list"
+   固定为"ivp/face/get_cap_history"
    否
     
    code
@@ -155,22 +158,43 @@
    否
     
     
-   total
+   face_total
    整型
-   结果总数量
+   该时间段包含的抓拍记录数量
    是
     
     
-   list
+   face_list
    数组
     
+   是
+    
+    
+    
+   time
+   字符串
+   抓拍的时间点，格式为yyyy-MM-dd HH:mm:ss
+   是
+    
+    
+    
+   jpeg_url_face
+   字符串
+   抓拍的人脸图片路径
    否
     
     
     
-   pid
+   jpeg_url_body
    字符串
-   一般为整数形式的字符串，最大不超过264
+   抓拍的人体全身图片路径
+   否
+    
+    
+    
+   jpeg_url_frame
+   字符串
+   抓拍记录对应的全景图片路径
    是
     
     
@@ -178,85 +202,46 @@
    name
    字符串
    姓名
-   是
+   否
     
     
     
-   work_id
-   字符串
-   工号
-   是
-    
-    
-    
-   id_card_no
-   字符串
-   身份证号
-   是
-    
-    
-    
-   ic_card_no
-   字符串
-   IC卡号
-   是
-    
-    
-    
-   department
-   字符串
-   部门
-   是
-    
-    
-    
-   photo
-   字符串
-   图片路径
-   是
-    
-    
-    
-   phone
-   字符串
-   手机号
-   是
+   similarity
+   整型
+   相似度
+   否
     
     
     
    gender
    整型
    性别，1-男 2-女
-   是
+   否
     
     
     
    age
    整型
    年龄
-   是
+   否
     
-    
-    
-   category
-   整型
-   类别，1:白名单；2:黑名单；3:VIP；4:访客
-   是
-    
-   
 
 
 */
 
+
 namespace Yuexintu.SDK.RequestAndResponse.WebSocket;
 
 /// <summary>
-/// 人员列表请求载荷
+/// 抓拍图像文件列表请求载荷
 /// </summary>
-public class PersonListRequestPayload : WebSocketRequestPayload
+public class CaptureImageFileListRequestPackage : WebSocketRequestPackage
 {
-	private const string Uri = "/person/list";
-	
+	private const string Uri = "/ivp/face/get_cap_history";
+	/// <summary>
+	/// 消息ID,由服务端生成,每条消息对应一个唯一的ID
+	/// TODO 待确认
+	/// </summary>
 	public string Token { get; set; }
 	/// <summary>
 	/// 数据部分
@@ -268,43 +253,61 @@ public class PersonListRequestPayload : WebSocketRequestPayload
 	/// </summary>
 	public class DataModel
 	{
-		public string Uri => PersonListRequestPayload.Uri;
+		/// <summary>
+		/// URI
+		/// </summary>
+		public static string Uri => CaptureImageFileListRequestPackage.Uri;
+		
+		/// <summary>
+		///  参数
+		/// </summary>
 		public ParamModel Param { get; set; }
+		
+		/// <summary>
+		/// 参数模型
+		/// </summary>
 		public class ParamModel
 		{
 			/// <summary>
-			/// 页面
+			/// 起始时间
+			/// </summary>
+			public string StartTime { get; set; }
+			
+			/// <summary>
+			/// 结束时间
+			/// </summary>
+			public string EndTime { get; set; }
+			
+			/// <summary>
+			/// 页码
 			/// </summary>
 			public int PageNum { get; set; }
+			
 			/// <summary>
-			/// 每页记录条数，最大不超过32
+			/// 每页记录条数
 			/// </summary>
 			public int PageSize { get; set; }
-			/// <summary>
-			/// 类别，1:白名单；2:黑名单；3:VIP；4:访客
-			/// </summary>
-			public int Category { get; set; }
+			
 			/// <summary>
 			/// 姓名
 			/// </summary>
 			public string Name { get; set; }
+			
 			/// <summary>
 			/// 工号
 			/// </summary>
 			public string WorkId { get; set; }
+			
 			/// <summary>
 			/// 身份证号
 			/// </summary>
 			public string IdCard { get; set; }
+			
 			/// <summary>
 			/// 手机号
 			/// </summary>
 			public string Phone { get; set; }
 		}
-		/// <summary>
-		/// 设备ID
-		/// </summary>
-		public string Did { get; set; }
 	}
 
 	public override string GetUri() => Uri;

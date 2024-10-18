@@ -1,9 +1,9 @@
 namespace Yuexintu.SDK.RequestAndResponse.WebSocket;
 
 /// <summary>
-/// 重启设备响应载荷
+/// 录像设置响应载荷
 /// </summary>
-public class RebootDeviceResponsePayload
+public class VideoSettingsResponsePackage
 {
 	/// <summary>
 	/// 错误码

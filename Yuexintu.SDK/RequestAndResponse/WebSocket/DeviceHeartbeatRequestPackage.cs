@@ -127,7 +127,7 @@ namespace Yuexintu.SDK.RequestAndResponse.WebSocket;
 /// <summary>
 /// 设备心跳请求载荷
 /// </summary>
-public class DeviceHeartbeatRequestPayload : WebSocketRequestPayload
+public class DeviceHeartbeatRequestPackage : WebSocketRequestPackage
 {
 	private const string Uri = "/heartbeat";
 	/// <summary>
@@ -155,7 +155,7 @@ public class DeviceHeartbeatRequestPayload : WebSocketRequestPayload
 			/// </summary>
 			public string Ip { get; set; }
 		}
-		public string Uri => DeviceHeartbeatRequestPayload.Uri;
+		public string Uri => DeviceHeartbeatRequestPackage.Uri;
 		public ParamModel Param { get; set; }
 	}
 

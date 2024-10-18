@@ -1,9 +1,9 @@
 namespace Yuexintu.SDK.RequestAndResponse.WebSocket;
 
 /// <summary>
-/// 人脸参数控制响应载荷
+/// 设备心跳响应载荷
 /// </summary>
-public class FaceParameterControlResponsePayload
+public class DeviceHeartbeatResponsePackage
 {
 	/// <summary>
 	/// 错误码

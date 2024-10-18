@@ -19,10 +19,10 @@ public class NetMessageProcessor
 		var dic = new Dictionary<string, Type>();
 		//通过反射获取所有的继承自IWebSocketRequestPayload的类,并注册到消息处理器中
 		var types = Assembly.GetExecutingAssembly().GetTypes()
-			.Where(type => type is { IsClass: true, IsAbstract: false } && typeof(WebSocketRequestPayload).IsAssignableFrom(type));
+			.Where(type => type is { IsClass: true, IsAbstract: false } && typeof(RequestAndResponse.WebSocket.WebSocketRequestPackage).IsAssignableFrom(type));
 		foreach (var type in types)
 		{
-			var instance = Activator.CreateInstance(type) as WebSocketRequestPayload;
+			var instance = Activator.CreateInstance(type) as RequestAndResponse.WebSocket.WebSocketRequestPackage;
 			if (instance == null)
 			{
 				continue;
@@ -32,7 +32,7 @@ public class NetMessageProcessor
 		return dic;
 	}
 
-	public delegate void WebSocketRequestPackageReceivedEventHandler(WebSocketRequestPayload iWebSocketRequestPackage);
+	public delegate void WebSocketRequestPackageReceivedEventHandler(RequestAndResponse.WebSocket.WebSocketRequestPackage iWebSocketRequestPackage);
 	public event WebSocketRequestPackageReceivedEventHandler? OnWebSocketRequestPackageReceived;
 
 	/// <summary>
@@ -61,7 +61,7 @@ public class NetMessageProcessor
 		     }
 		   }
         */
-		var websocketRequestPackage = new WebSocketRequestPackage(message);
+		var websocketRequestPackage = new WebSocketRequestPackageSimple(message);
 		if (string.IsNullOrWhiteSpace(websocketRequestPackage.MsgId) 
 		    )
 		    // || Guid.TryParse(websocketRequestPackage.MsgId, out var _) == false)
@@ -75,7 +75,7 @@ public class NetMessageProcessor
 			return;
 		}
 		//创建一个实例
-		if (Activator.CreateInstance(type) is not WebSocketRequestPayload instance)
+		if (Activator.CreateInstance(type) is not RequestAndResponse.WebSocket.WebSocketRequestPackage instance)
 		{
 			Console.WriteLine($"无法创建实例, uri: {websocketRequestPackage.Data.Uri}, body: {message}");
 			return;

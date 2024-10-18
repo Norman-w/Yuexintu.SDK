@@ -98,7 +98,7 @@ namespace Yuexintu.SDK.RequestAndResponse.WebSocket;
 /// <summary>
 /// 删除人员信息请求载荷
 /// </summary>
-public class DeletePersonInfoRequestPayload : WebSocketRequestPayload
+public class DeletePersonInfoRequestPackage : WebSocketRequestPackage
 {
 	public const string Uri = "/ivp/face/delete";
 	/// <summary>
@@ -114,7 +114,7 @@ public class DeletePersonInfoRequestPayload : WebSocketRequestPayload
 		/// <summary>
 		/// URI
 		/// </summary>
-		public static string Uri => DeletePersonInfoRequestPayload.Uri;
+		public static string Uri => DeletePersonInfoRequestPackage.Uri;
 
 		/// <summary>
 		/// 参数

@@ -180,7 +180,7 @@ namespace Yuexintu.SDK.RequestAndResponse.WebSocket;
 /// <summary>
 /// 人员信息请求载荷
 /// </summary>
-public class PersonInfoRequestPayload : WebSocketRequestPayload
+public class PersonInfoRequestPackage : WebSocketRequestPackage
 {
 	private const string Uri = "/person/query";
 	/// <summary>
@@ -195,7 +195,7 @@ public class PersonInfoRequestPayload : WebSocketRequestPayload
 	/// </summary>
 	public class DataModel
 	{
-		public string Uri => PersonInfoRequestPayload.Uri;
+		public string Uri => PersonInfoRequestPackage.Uri;
 		public class ParamModel
 		{
 			/// <summary>

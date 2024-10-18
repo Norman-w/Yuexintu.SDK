@@ -3,7 +3,7 @@ namespace Yuexintu.SDK.RequestAndResponse.WebSocket;
 /// <summary>
 /// 以图搜图响应载荷
 /// </summary>
-public class ImageSearchResponsePayload
+public class ImageSearchResponsePackage
 {
 	/// <summary>
 	/// 错误码
