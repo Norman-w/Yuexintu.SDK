@@ -85,7 +85,12 @@ public class NetMessageProcessor
 		JsonConvert.PopulateObject(message, instance);
 		//触发事件
 		var responsePackage = OnWebSocketRequestPackageReceived?.Invoke(instance);
-		var responseJson = JsonConvert.SerializeObject(responsePackage);
+		//json 配置,使用小驼峰
+		var settings = new JsonSerializerSettings
+		{
+			ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver()
+		};
+		var responseJson = JsonConvert.SerializeObject(responsePackage, settings);
 		if (responsePackage != null)
 		{
 			returnMessageAction(responseJson);

@@ -41,15 +41,34 @@ netMessageProcessor.OnWebSocketRequestPackageReceived += payload =>
 				MsgId = deviceConnectionRequestPayload.MsgId,
 				Data = new DeviceConnectionResponsePackage.DataModel()
 				{
-					//uri 不需要设置
-					Msg = "Did为空,无法连接",
-					Code = ErrorCode.DeviceNotRegistered,
+					#region 拒绝
+
+					// //uri 不需要设置
+					// Msg = "Did为空,无法连接",
+					// Code = ErrorCode.DeviceNotRegistered,
+					// Result = new DeviceConnectionResponsePackage.DataModel.ResultModel()
+					// {
+					// 	Token = string.Empty,
+					// 	Expire = 0,
+					// 	Interval = 0
+					// }
+
+					#endregion
+
+					#region 同意,生成Token并下发
+					//可以正常下发Token,摄像机收到以后不会再次请求连接,但是再次连接后 Did没有下发
+
+					// Uri = "/connect",
+					Msg = "OK",
+					Code = ErrorCode.Success,
 					Result = new DeviceConnectionResponsePackage.DataModel.ResultModel()
 					{
-						Token = string.Empty,
-						Expire = 0,
-						Interval = 0
+						Token = "1234567890",
+						Expire = 3600,
+						Interval = 60,
 					}
+
+					#endregion
 				}
 			};
 			

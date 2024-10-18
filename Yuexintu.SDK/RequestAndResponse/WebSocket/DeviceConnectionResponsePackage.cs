@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using Yuexintu.SDK.Enum;
 
 namespace Yuexintu.SDK.RequestAndResponse.WebSocket;
@@ -10,6 +11,7 @@ public class DeviceConnectionResponsePackage : WebSocketResponsePackage
 	/// <summary>
 	/// 消息ID
 	/// </summary>
+	[JsonProperty("msgid")]
 	public string MsgId { get; set; }
 
 	/// <summary>

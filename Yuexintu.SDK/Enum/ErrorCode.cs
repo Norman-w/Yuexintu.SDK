@@ -24,8 +24,12 @@
    426：请求的资源不存在
 
 */
+
+using Newtonsoft.Json;
+
 namespace Yuexintu.SDK.Enum;
 
+[JsonConverter(typeof(ErrorCodeJsonConverter))]
 public struct ErrorCode
 {
 	#region 构造函数
@@ -88,4 +92,31 @@ public struct ErrorCode
 	public static readonly ErrorCode ResourceNotFound = new ErrorCode(426, "请求的资源不存在");
 
 	#endregion
+}
+
+//创建一个Newtonsoft.Json的JsonConverter以将ErrorCode转换为Json字符串,并可以通过Json字符串反序列化为ErrorCode
+public class ErrorCodeJsonConverter : JsonConverter<ErrorCode>
+{
+	public override void WriteJson(JsonWriter writer, ErrorCode value, JsonSerializer serializer)
+	{
+		writer.WriteValue(value.Value);
+	}
+
+	public override ErrorCode ReadJson(JsonReader reader, Type objectType, ErrorCode existingValue, bool hasExistingValue, JsonSerializer serializer)
+	{
+		if (reader.TokenType == JsonToken.Integer)
+		{
+			var value = Convert.ToInt32(reader.Value);
+			return new ErrorCode(value, string.Empty);
+		}
+		else if (reader.TokenType == JsonToken.String)
+		{
+			var value = Convert.ToInt32(reader.Value);
+			return new ErrorCode(value, $"{reader.Value}");
+		}
+		else
+		{
+			throw new JsonSerializationException($"Unexpected token or value when parsing ErrorCode. Token: {reader.TokenType}, Value: {reader.Value}");
+		}
+	}
 }
