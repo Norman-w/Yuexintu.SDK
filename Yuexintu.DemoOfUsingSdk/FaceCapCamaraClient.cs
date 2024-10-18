@@ -54,14 +54,14 @@ public class FaceCapCamaraClient : IClient
 				else if (result.MessageType == WebSocketMessageType.Text)
 				{
 					var message = Encoding.UTF8.GetString(buffer, 0, result.Count);
-					Console.WriteLine($"接收到客户端消息: {message}");
+					// Console.WriteLine($"接收到客户端消息: {message}");
 					OnWebSocketMessageReceived(message);
 				}
 			}
 		}
 		catch (Exception e)
 		{
-			Console.WriteLine("读取客户端消息失败,错误信息:" + e.Message);
+			// Console.WriteLine("读取客户端消息失败,错误信息:" + e.Message);
 		}
 		finally
 		{
@@ -84,7 +84,7 @@ public class FaceCapCamaraClient : IClient
 	/// <param name="message"></param>
 	private void OnWebSocketMessageReceived(string message)
 	{
-		Console.WriteLine($"Received message {message}");
+		// Console.WriteLine($"Received message {message}");
 		OnRequestReceived?.Invoke(this, message);
 		// try
 		// {

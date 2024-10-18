@@ -1,6 +1,6 @@
 ﻿/*
- 
- 
+
+
  * 添加对Yuexintu.SDK的引用
  * 初始化SdkServer并启动
  * 初始化NetFacade对象并启动
@@ -11,35 +11,84 @@
 */
 
 using Yuexintu.DemoOfUsingSdk;
+using Yuexintu.SDK.Enum;
+using Yuexintu.SDK.RequestAndResponse.WebSocket;
 using Yuexintu.SDK.Service;
 
 Console.WriteLine("Demo of using SDK is starting...");
-var netFacade = new NetFacade();
-	netFacade.Start();
-	netFacade.SessionCreatedAsync += async session =>
+var netMessageProcessor = new NetMessageProcessor();
+netMessageProcessor.OnWebSocketRequestPackageReceived += payload =>
+{
+	Console.ForegroundColor = ConsoleColor.Cyan;
+	Console.WriteLine($"接收到WebSocket请求: {payload.GetUri()}");
+	Console.ResetColor();
+
+	#region 处理摄像机发过来的请求
+
+	if (payload is DeviceConnectionRequestPayload deviceConnectionRequestPayload)
 	{
-		Console.WriteLine($"已创建新会话: {session.ClientType}");
-		// switch (session.ClientType)
-		// {
-		// 	case ClientTypeEnum.FaceCapCamera:
-		// 	case ClientTypeEnum.Unknown:
-		// 	case ClientTypeEnum.Reporter:
-		// 	case ClientTypeEnum.Receiver:
-		// 	case ClientTypeEnum.Writer:
-		// 	default:
-		// 		throw new ArgumentOutOfRangeException();
-		// }
-		var client = FaceCapCamaraClient.FromSession(session);
-		client.OnRequestReceived += (sender, message) =>
+		Console.WriteLine($"摄像机连接请求, SN: {deviceConnectionRequestPayload.Data.Param.Sn}");
+		if (string.IsNullOrEmpty(deviceConnectionRequestPayload.Data.Param.Did))
 		{
-			Console.WriteLine($"接收到客户端消息: {message}");
-		};
-		client.ClientDisconnected += (c) =>
+			Console.ForegroundColor = ConsoleColor.Red;
+			Console.WriteLine("摄像机连接请求中的Did为空,无法连接");
+			Console.ResetColor();
+
+			#region 发送421错误返回给摄像机
+
+			var response = new DeviceConnectionResponsePayload()
+			{
+				MsgId = deviceConnectionRequestPayload.MsgId,
+				Data = new DeviceConnectionResponsePayload.DataModel()
+				{
+					//uri 不需要设置
+					Msg = "Did为空,无法连接",
+					Code = ErrorCode.DeviceNotRegistered,
+					Result = new DeviceConnectionResponsePayload.DataModel.ResultModel()
+					{
+						Token = string.Empty,
+						Expire = 0,
+						Interval = 0
+					}
+				}
+			};
+
+			#endregion
+		}
+		else
 		{
-			Console.WriteLine($"报告者客户端断开连接: {c}");
-		};
-		await client.StartWorking();
+			Console.ForegroundColor = ConsoleColor.Green;
+			Console.WriteLine($"摄像机连接请求中的Did为: {deviceConnectionRequestPayload.Data.Param.Did} , 可以分配服务端通讯Token进行后续通讯");
+			Console.ResetColor();
+		}
+	}
+
+	#endregion
+};
+var netFacade = new NetFacade();
+netFacade.Start();
+netFacade.SessionCreatedAsync += async session =>
+{
+	Console.WriteLine($"已创建新会话: {session.ClientType}");
+	// switch (session.ClientType)
+	// {
+	// 	case ClientTypeEnum.FaceCapCamera:
+	// 	case ClientTypeEnum.Unknown:
+	// 	case ClientTypeEnum.Reporter:
+	// 	case ClientTypeEnum.Receiver:
+	// 	case ClientTypeEnum.Writer:
+	// 	default:
+	// 		throw new ArgumentOutOfRangeException();
+	// }
+	var client = FaceCapCamaraClient.FromSession(session);
+	client.OnRequestReceived += (sender, message) =>
+	{
+		// Console.WriteLine($"接收到客户端消息: {message}");
+		netMessageProcessor.ProcessMessage(message);
 	};
+	client.ClientDisconnected += (c) => { Console.WriteLine($"报告者客户端断开连接: {c}"); };
+	await client.StartWorking();
+};
 Console.WriteLine("Demo of using SDK has started...");
 
 var startTime = DateTime.Now;
@@ -48,6 +97,6 @@ var startTime = DateTime.Now;
 while (true)
 {
 	//模拟应用程序的其他操作,输出已运行时间
-    Console.WriteLine($"Demo of using SDK is running...{(DateTime.Now - startTime).TotalSeconds} seconds");
+	Console.WriteLine($"Demo of using SDK is running...{(DateTime.Now - startTime).TotalSeconds} seconds");
 	Thread.Sleep(5000);
 }

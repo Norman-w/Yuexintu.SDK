@@ -2,6 +2,10 @@ using Newtonsoft.Json;
 
 public class WebSocketRequestPackage
 {
+    public WebSocketRequestPackage()
+    {
+        //支持反序列化
+    }
     public WebSocketRequestPackage(string message)
     {
         var webSocketRequestPayload = JsonConvert.DeserializeObject<WebSocketRequestPackage>(message);

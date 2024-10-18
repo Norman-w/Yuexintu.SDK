@@ -1,3 +1,5 @@
+using Yuexintu.SDK.Enum;
+
 namespace Yuexintu.SDK.RequestAndResponse.WebSocket;
 
 /// <summary>
@@ -8,7 +10,7 @@ public class DeviceConnectionResponsePayload
 	/// <summary>
 	/// 消息ID
 	/// </summary>
-	public string Msgid { get; set; }
+	public string MsgId { get; set; }
 
 	/// <summary>
 	/// 数据部分
@@ -23,42 +25,21 @@ public class DeviceConnectionResponsePayload
 		/// <summary>
 		/// 请求的URI
 		/// </summary>
-		public string Uri { get; set; }
+		public string Uri => "/connect";
 
-		/// <summary>
-		/// 参数部分
-		/// </summary>
-		public ParamModel Param { get; set; }
-
-		/// <summary>
-		/// 参数模型
-		/// </summary>
-		public class ParamModel
+		public ErrorCode Code { get; set; }
+		
+		public string Msg { get; set; }
+		
+		public ResultModel Result { get; set; }
+		
+		public class ResultModel
 		{
-			/// <summary>
-			/// 设备ID
-			/// </summary>
-			public string Did { get; set; }
-
-			/// <summary>
-			/// 序列号
-			/// </summary>
-			public string Sn { get; set; }
-
-			/// <summary>
-			/// IP地址
-			/// </summary>
-			public string Ip { get; set; }
-
-			/// <summary>
-			/// 签名
-			/// </summary>
-			public string Sign { get; set; }
-
-			/// <summary>
-			/// 时间戳
-			/// </summary>
-			public long Ts { get; set; }
+			public string Token { get; set; }
+			
+			public int Expire { get; set; }
+			
+			public int Interval { get; set; }
 		}
 	}
 }

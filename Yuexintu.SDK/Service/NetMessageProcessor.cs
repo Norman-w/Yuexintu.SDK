@@ -1,3 +1,5 @@
+using System.Reflection;
+using Newtonsoft.Json;
 using Yuexintu.SDK.RequestAndResponse.WebSocket;
 
 namespace Yuexintu.SDK.Service;
@@ -9,14 +11,41 @@ namespace Yuexintu.SDK.Service;
 /// </summary>
 public class NetMessageProcessor
 {
-	public NetMessageProcessor()
-	{
-	}
-	
-	public delegate void WebSocketRequestReceivedEventHandler(WebSocketRequestPayload webSocketRequestPayload);
+	private Dictionary<string, Type>? _knownRequestPayloadTypes;
+	private Dictionary<string, Type> KnownRequestPayloadTypes => _knownRequestPayloadTypes ??= GetAllRequestTypesDic();
 
+	private static Dictionary<string, Type> GetAllRequestTypesDic()
+	{
+		var dic = new Dictionary<string, Type>();
+		//通过反射获取所有的继承自IWebSocketRequestPayload的类,并注册到消息处理器中
+		var types = Assembly.GetExecutingAssembly().GetTypes()
+			.Where(type => type is { IsClass: true, IsAbstract: false } && typeof(WebSocketRequestPayload).IsAssignableFrom(type));
+		foreach (var type in types)
+		{
+			var instance = Activator.CreateInstance(type) as WebSocketRequestPayload;
+			if (instance == null)
+			{
+				continue;
+			}
+			dic.Add(instance.GetUri(), type);
+		}
+		return dic;
+	}
+
+	public delegate void WebSocketRequestPackageReceivedEventHandler(WebSocketRequestPayload iWebSocketRequestPackage);
+	public event WebSocketRequestPackageReceivedEventHandler? OnWebSocketRequestPackageReceived;
+
+	/// <summary>
+	/// 处理从http/websocket收到的文本消息,如果消息被正确解析,将会通过OnWebSocketRequestReceived事件传递出去.
+	/// </summary>
+	/// <param name="message"></param>
 	public void ProcessMessage(string message)
 	{
+		if(string.IsNullOrEmpty(message))
+		{
+			Console.WriteLine("无效的消息,消息为空");
+			return;
+		}
 		/*
 		 消息结构类似于:
 		 摄像机连接请求
@@ -33,6 +62,27 @@ public class NetMessageProcessor
 		   }
         */
 		var websocketRequestPackage = new WebSocketRequestPackage(message);
-		
+		if (string.IsNullOrWhiteSpace(websocketRequestPackage.MsgId) 
+		    )
+		    // || Guid.TryParse(websocketRequestPackage.MsgId, out var _) == false)
+		{
+			Console.WriteLine($"无效的消息,没有有效的MsgId:{message}");
+			return;
+		}
+		if(KnownRequestPayloadTypes.TryGetValue(websocketRequestPackage.Data.Uri, out var type) == false)
+		{
+			Console.WriteLine($"未知的请求类型, uri: {websocketRequestPackage.Data.Uri}, body: {message}");
+			return;
+		}
+		//创建一个实例
+		if (Activator.CreateInstance(type) is not WebSocketRequestPayload instance)
+		{
+			Console.WriteLine($"无法创建实例, uri: {websocketRequestPackage.Data.Uri}, body: {message}");
+			return;
+		}
+		//使用json填充
+		JsonConvert.PopulateObject(message, instance);
+		//触发事件
+		OnWebSocketRequestPackageReceived?.Invoke(instance);
 	}
 }
