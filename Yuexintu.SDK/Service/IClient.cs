@@ -14,7 +14,7 @@
 */
 
 
-namespace Yuexintu.DemoOfUsingSdk;
+namespace Yuexintu.SDK.Service;
 /// <summary>
 /// 客户端断开连接事件处理委托
 /// </summary>

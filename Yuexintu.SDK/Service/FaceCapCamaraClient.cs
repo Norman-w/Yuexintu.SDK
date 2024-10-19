@@ -10,10 +10,8 @@
 
 using System.Net.WebSockets;
 using System.Text;
-using Newtonsoft.Json;
-using Yuexintu.SDK.Service;
 
-namespace Yuexintu.DemoOfUsingSdk;
+namespace Yuexintu.SDK.Service;
 
 public class FaceCapCamaraClient : IClient
 {
@@ -85,7 +83,7 @@ public class FaceCapCamaraClient : IClient
 	private void OnWebSocketMessageReceived(string message)
 	{
 		// Console.WriteLine($"Received message {message}");
-		OnRequestReceived?.Invoke(this, message);
+		OnRequestMessageReceived?.Invoke(this, message);
 		// try
 		// {
 		// 	var logRecord4Net = JsonConvert.DeserializeObject<LogRecord4Net>(message);
@@ -109,8 +107,8 @@ public class FaceCapCamaraClient : IClient
 		// 	Console.WriteLine($"解析日志失败:{e}");
 		// }
 	}
-	public delegate void RequestReceivedEventHandler(FaceCapCamaraClient sender, string message);
-	public event RequestReceivedEventHandler? OnRequestReceived;
+	public delegate void RequestMessageReceivedEventHandler(FaceCapCamaraClient sender, string message);
+	public event RequestMessageReceivedEventHandler? OnRequestMessageReceived;
 
 	public void Send(string message)
 	{

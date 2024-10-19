@@ -8,12 +8,13 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Yuexintu.SDK.Service;
 
-public class NetFacade
+internal class NetFacade : INetFacade
 {
 	#region Public
 
-	public NetFacade()
+	public NetFacade(int port)
 	{
+		_port = port;
 		_backgroundWorker.DoWork += NetFacadeBackgroundWorker_DoWork;
 	}
 
@@ -37,17 +38,19 @@ public class NetFacade
 	/// <summary>
 	/// 异步会话创建事件,当新的会话创建时触发,并等待事件处理完成
 	/// </summary>
-	public event SessionCreatedEventHandler? SessionCreatedAsync;
+	public event WebSocketSessionCreatedEventHandler? WebSocketSessionCreatedAsync;
 
 	#endregion
 
 	#region Private
+	
+	private readonly int _port;
 
 	private readonly BackgroundWorker _backgroundWorker = new();
 
 	private void NetFacadeBackgroundWorker_DoWork(object? sender, DoWorkEventArgs e)
 	{
-		var builder = InitWebApplicationBuilder();
+		var builder = InitWebApplicationBuilder(_port);
 		using var app = InitWebApplication(builder);
 		ConfigSwagger(app);
 
@@ -62,7 +65,7 @@ public class NetFacade
 		#endregion
 	}
 
-	private static WebApplicationBuilder InitWebApplicationBuilder()
+	private static WebApplicationBuilder InitWebApplicationBuilder(int port)
 	{
 		#region 创建和配置Builder
 
@@ -85,7 +88,7 @@ public class NetFacade
 
 		builder.WebHost.UseKestrel(options =>
 		{
-			options.ListenAnyIP(5011, listenOptions => { listenOptions.Protocols = HttpProtocols.Http1AndHttp2AndHttp3; });
+			options.ListenAnyIP(port, listenOptions => { listenOptions.Protocols = HttpProtocols.Http1AndHttp2AndHttp3; });
 			// options.ListenAnyIP(App.Setting.GrpcWebPort, listenOptions =>
 			// {
 			// Grpc Web需要使用Http1
@@ -182,7 +185,7 @@ public class NetFacade
 						await context.WebSockets.AcceptWebSocketAsync();
 					var session = new SessionCreatedEventArgs(Guid.NewGuid().ToString(), webSocket);
 					//触发会话创建事件,并等待他的完整生命周期
-					if (SessionCreatedAsync != null) await SessionCreatedAsync(session);
+					if (WebSocketSessionCreatedAsync != null) await WebSocketSessionCreatedAsync(session);
 					else Console.WriteLine("未处理的会话创建事件");
 				}
 				catch (Exception err)
@@ -206,8 +209,6 @@ public class NetFacade
 
 	#endregion
 }
-
-public delegate Task SessionCreatedEventHandler(SessionCreatedEventArgs session);
 
 public class SessionCreatedEventArgs : EventArgs
 {

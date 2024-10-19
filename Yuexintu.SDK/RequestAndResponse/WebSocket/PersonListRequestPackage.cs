@@ -248,6 +248,8 @@
 
 */
 
+using Newtonsoft.Json;
+
 namespace Yuexintu.SDK.RequestAndResponse.WebSocket;
 
 /// <summary>
@@ -275,10 +277,12 @@ public class PersonListRequestPackage : WebSocketRequestPackage
 			/// <summary>
 			/// 页面
 			/// </summary>
+			[JsonProperty("page_num")]
 			public int PageNum { get; set; }
 			/// <summary>
 			/// 每页记录条数，最大不超过32
 			/// </summary>
+			[JsonProperty("page_size")]
 			public int PageSize { get; set; }
 			/// <summary>
 			/// 类别，1:白名单；2:黑名单；3:VIP；4:访客

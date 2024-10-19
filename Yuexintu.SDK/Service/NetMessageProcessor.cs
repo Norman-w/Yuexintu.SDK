@@ -12,18 +12,17 @@ namespace Yuexintu.SDK.Service;
 public class NetMessageProcessor
 {
 	private Dictionary<string, Type>? _knownRequestPayloadTypes;
-	private Dictionary<string, Type> KnownRequestPayloadTypes => _knownRequestPayloadTypes ??= GetAllRequestTypesDic();
+	private Dictionary<string, Type> KnownRequestPayloadTypes => _knownRequestPayloadTypes ??= GetAllRequestPackageTypesDic();
 
-	private static Dictionary<string, Type> GetAllRequestTypesDic()
+	private static Dictionary<string, Type> GetAllRequestPackageTypesDic()
 	{
 		var dic = new Dictionary<string, Type>();
 		//通过反射获取所有的继承自IWebSocketRequestPayload的类,并注册到消息处理器中
 		var types = Assembly.GetExecutingAssembly().GetTypes()
-			.Where(type => type is { IsClass: true, IsAbstract: false } && typeof(RequestAndResponse.WebSocket.WebSocketRequestPackage).IsAssignableFrom(type));
+			.Where(type => type is { IsClass: true, IsAbstract: false } && typeof(WebSocketRequestPackage).IsAssignableFrom(type));
 		foreach (var type in types)
 		{
-			var instance = Activator.CreateInstance(type) as RequestAndResponse.WebSocket.WebSocketRequestPackage;
-			if (instance == null)
+			if (Activator.CreateInstance(type) is not WebSocketRequestPackage instance)
 			{
 				continue;
 			}
@@ -76,13 +75,14 @@ public class NetMessageProcessor
 			return;
 		}
 		//创建一个实例
-		if (Activator.CreateInstance(type) is not RequestAndResponse.WebSocket.WebSocketRequestPackage instance)
+		if (Activator.CreateInstance(type) is not WebSocketRequestPackage instance)
 		{
 			Console.WriteLine($"无法创建实例, uri: {websocketRequestPackage.Data.Uri}, body: {message}");
 			return;
 		}
 		//使用json填充
 		JsonConvert.PopulateObject(message, instance);
+		instance.SetBody(message);
 		//触发事件
 		var responsePackage = OnWebSocketRequestPackageReceived?.Invoke(instance);
 		//json 配置,使用小驼峰

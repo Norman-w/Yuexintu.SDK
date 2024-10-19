@@ -1,3 +1,5 @@
+using Newtonsoft.Json;
+
 namespace Yuexintu.SDK.RequestAndResponse.WebSocket;
 
 public abstract class WebSocketRequestPackage : IWebSocketRequestPackage
@@ -11,4 +13,11 @@ public abstract class WebSocketRequestPackage : IWebSocketRequestPackage
 	/// 消息ID
 	/// </summary>
 	public string MsgId { get; set; }
+	[JsonIgnore]
+	public string Body { get; private set; }
+
+	internal void SetBody(string messageBody)
+	{
+		Body = messageBody;
+	}
 }
