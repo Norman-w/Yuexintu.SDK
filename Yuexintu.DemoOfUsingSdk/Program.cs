@@ -167,6 +167,26 @@ WebSocketResponsePackage 处理摄像机发过来的请求包回调函数(WebSoc
 				Console.WriteLine(
 					$"摄像机连接请求中的Did为: {deviceConnectionRequestPayload.Data.Param.Did} , 可以分配服务端通讯Token进行后续通讯");
 				Console.ResetColor();
+				var response = new DeviceConnectionResponsePackage()
+				{
+					MsgId = deviceConnectionRequestPayload.MsgId,
+					Data = new DeviceConnectionResponsePackage.DataModel()
+					{
+						Msg = "OK",
+						Code = ErrorCode.Success,
+						Result = new DeviceConnectionResponsePackage.DataModel.ResultModel()
+						{
+							Token = "1234567890",
+							Expire = 3600,
+							Interval = 60
+						}
+					}
+				};
+				
+				Console.ForegroundColor = ConsoleColor.Magenta;
+				Console.WriteLine($"返回给摄像机的消息: {response.Data.Code} - {response.Data.Msg}");
+				Console.ResetColor();
+				return response;
 			}
 
 			break;
