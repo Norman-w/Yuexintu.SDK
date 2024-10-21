@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OpenApi.Models;
+using Yuexintu.SDK.Service.Api;
 
 namespace Yuexintu.SDK.Service;
 
@@ -43,7 +45,7 @@ internal class NetFacade : INetFacade
 	#endregion
 
 	#region Private
-	
+
 	private readonly int _port;
 
 	private readonly BackgroundWorker _backgroundWorker = new();
@@ -76,9 +78,23 @@ internal class NetFacade : INetFacade
 
 		#region Api controller和swagger
 
-		builder.Services.AddControllers();
+		builder.Services.AddControllers()
+			.AddApplicationPart(typeof(ApiController).Assembly)
+			.AddControllersAsServices();
 		builder.Services.AddEndpointsApiExplorer();
-		builder.Services.AddSwaggerGen();
+		builder.Services.AddSwaggerGen(
+			c =>
+			{
+				c.SwaggerDoc(
+					"v1",
+					new OpenApiInfo
+					{
+						Title = "Yuexintu人脸识别SDK HTTP API",
+						Version = "v1"
+					}
+				);
+			}
+		);
 
 		#endregion
 
@@ -88,7 +104,8 @@ internal class NetFacade : INetFacade
 
 		builder.WebHost.UseKestrel(options =>
 		{
-			options.ListenAnyIP(port, listenOptions => { listenOptions.Protocols = HttpProtocols.Http1AndHttp2AndHttp3; });
+			options.ListenAnyIP(port,
+				listenOptions => { listenOptions.Protocols = HttpProtocols.Http1AndHttp2AndHttp3; });
 			// options.ListenAnyIP(App.Setting.GrpcWebPort, listenOptions =>
 			// {
 			// Grpc Web需要使用Http1
@@ -150,6 +167,12 @@ internal class NetFacade : INetFacade
 		app.UseAuthorization();
 
 		app.MapControllers();
+
+		//这种方式比较原始.但是可以用来测试
+		// app.MapPost("/api/v1/adapter/lenfocus/face/capture", async context =>
+		// {
+		// 	await context.Response.WriteAsync($"Hello World! {context.Request.Path}");
+		// });
 
 		#endregion
 	}
