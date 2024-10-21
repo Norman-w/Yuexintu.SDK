@@ -5,7 +5,7 @@ using Yuexintu.SDK.RequestAndResponse.Http;
 namespace Yuexintu.SDK.Service.Api;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("/[controller]")]
 public class ApiController : ControllerBase
 {
     /// <summary>
