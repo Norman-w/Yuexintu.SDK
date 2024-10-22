@@ -1,6 +1,6 @@
+using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using Yuexintu.SDK.Enum;
 using Yuexintu.SDK.RequestAndResponse.Http;
 
@@ -105,11 +105,26 @@ public class ApiController : ControllerBase
 	/// <summary>
 	/// 上报告警信息
 	/// </summary>
-	/// <param name="request">请求参数</param>
 	/// <returns>响应结果</returns>
 	[HttpPost("v1/device/report/event")]
-	public IActionResult ReportEvent([FromBody] EventReportRequest request)
+	public IActionResult ReportEvent()
 	{
+		//从请求中读取数据
+		var body = Request.Body;
+		var reader = new StreamReader(body);
+		var json = reader.ReadToEndAsync().Result;
+		var request = JsonConvert.DeserializeObject<EventReportRequest>(json);
+		if (request == null)
+		{
+			Console.ForegroundColor = ConsoleColor.Red;
+			Console.WriteLine("接口: /v1/device/report/event, 请求数据为空");
+			Console.ResetColor();
+			return BadRequest();
+		}
+		 
+		Console.ForegroundColor = ConsoleColor.Cyan;
+		Console.WriteLine($"收到告警信息: Type: {request.Type}, 正文: {json}");
+		Console.ResetColor();
 		var response = new EventReportResponse
 		{
 			Code = ErrorCode.Success.Value,
@@ -190,4 +205,42 @@ public class ApiController : ControllerBase
 		Console.ResetColor();
 		return Ok(response);
 	}
+	
+	/// <summary>
+	/// ✅ 已调通正常可使用接口.摄像机抓拍到人脸后会调用该接口上传图片内容,body可以直接作为前端img标签的src使用.
+	/// </summary>
+	/// <returns></returns>
+	[HttpPost("v1/access/upload/base64img")]
+	public IActionResult AccessUploadBase64Image()
+	{
+		//从请求中读取数据
+		var body = Request.Body;
+		var reader = new StreamReader(body);
+		var dataImageBase64 = reader.ReadToEndAsync().Result;
+
+		if (Debugger.IsAttached)
+		{
+			//用户文件夹下创建AccessUploadBase64Image文件夹
+			var folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "AccessUploadBase64Image");
+			if (!Directory.Exists(folder))
+			{
+				Directory.CreateDirectory(folder);
+			}
+			//保存图片
+			var fileName = Path.Combine(folder, $"{DateTime.Now:yyyy-MM-dd HH-mm-ss}.jpg");
+			//格式是data:image/jpeg;base64,开头,所以要规范化保存到Image
+			var imageBase64 = dataImageBase64.Replace("data:image/jpeg;base64,", "");
+			var imageBytes = Convert.FromBase64String(imageBase64);
+			System.IO.File.WriteAllBytes(fileName, imageBytes);
+			Console.ForegroundColor = ConsoleColor.Cyan;
+			Console.WriteLine($"保存图片到: {fileName}");
+			Console.ResetColor();
+		}
+		
+		var response = new Base64ImageResponse();
+		return Ok(response);
+	}
+}
+public class Base64ImageResponse
+{
 }
