@@ -108,10 +108,12 @@ WebSocketResponsePackage 处理摄像机发过来的请求包回调函数(WebSoc
 		case DeviceConnectionRequestPackage deviceConnectionRequestPayload:
 		{
 			Console.WriteLine($"摄像机连接请求, SN: {deviceConnectionRequestPayload.Data.Param.Sn}");
-			if (string.IsNullOrEmpty(deviceConnectionRequestPayload.Data.Param.Did))
+			if (string.IsNullOrEmpty(deviceConnectionRequestPayload.Data.Param.Did)
+			    && string.IsNullOrEmpty(deviceConnectionRequestPayload.Data.Param.Sn)
+			    )
 			{
 				Console.ForegroundColor = ConsoleColor.Red;
-				Console.WriteLine("摄像机连接请求中的Did为空,无法连接");
+				Console.WriteLine("摄像机连接请求中的Did 和 SN 都为空,无法连接");
 				Console.ResetColor();
 
 				#region 发送421错误返回给摄像机
@@ -124,7 +126,7 @@ WebSocketResponsePackage 处理摄像机发过来的请求包回调函数(WebSoc
 						#region 拒绝
 
 						//uri 不需要设置
-						Msg = "Did为空,无法连接",
+						Msg = "Did 和 SN 都为空,无法连接",
 						Code = ErrorCode.DeviceNotRegistered,
 						Result = new DeviceConnectionResponsePackage.DataModel.ResultModel()
 						{
@@ -164,8 +166,13 @@ WebSocketResponsePackage 处理摄像机发过来的请求包回调函数(WebSoc
 			else
 			{
 				Console.ForegroundColor = ConsoleColor.Green;
-				Console.WriteLine(
-					$"摄像机连接请求中的Did为: {deviceConnectionRequestPayload.Data.Param.Did} , 可以分配服务端通讯Token进行后续通讯");
+				var did = deviceConnectionRequestPayload.Data.Param.Did;
+				var sn = deviceConnectionRequestPayload.Data.Param.Sn;
+				Console.WriteLine($"摄像机连接请求中的Did为: {did} , SN为: {sn}");
+				if(!string.IsNullOrEmpty(sn) || !string.IsNullOrEmpty(did))
+				{
+					Console.WriteLine("具备有效的SN或者Did,可以连接");
+				}
 				Console.ResetColor();
 				var response = new DeviceConnectionResponsePackage()
 				{
