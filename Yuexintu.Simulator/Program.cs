@@ -290,14 +290,18 @@ internal static class Program
 			//通过HTTP发送人脸识别请求(报告识别到人脸)
 			var faceRecognitionRequestPackage = new FaceCaptureRequest
 			{
-				Uuid = pid,
+				Pid = pid,
 				Age = (int)age,
 				Name = name,
 				Gender = gender,
 				Time = time,
 				Did = "TODO",
 				Data = new FaceCaptureRequest.FaceDataModel
-					{ FaceData = randomFaceImg, BodyData = randomBodyImg, BgData = randomBgImg }
+				{
+					FaceData = randomFaceImg, 
+					BodyData = randomBodyImg, 
+					BgData = randomBgImg
+				}
 			};
 			/*
 
