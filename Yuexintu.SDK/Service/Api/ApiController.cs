@@ -103,6 +103,7 @@ public class ApiController : ControllerBase
 	}
 
 	/// <summary>
+	/// ⏳ 已经可以正常接受到消息,但待确认是否因为没有通过人脸获取到pid导致,另外告警消息的结构和现有定义是否一致尚未确认
 	/// 上报告警信息
 	/// </summary>
 	/// <returns>响应结果</returns>
