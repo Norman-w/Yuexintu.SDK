@@ -37,7 +37,7 @@ void 单独使用消息处理器对象消息由外部提供()
 
 #region 用法示例2
 
-void 使用已经存在的WebSocket服务器对象和Sdk服务器()
+void 使用已经存在的含WebSocket功能的Http服务器对象和Sdk服务器()
 {
 	/*
 
@@ -73,7 +73,7 @@ void 使用已经存在的WebSocket服务器对象和Sdk服务器()
 
 #region 用法示例3
 
-void 使用内置WebSocket服务器和内置消息处理器()
+void 使用内置Http和Websocket服务器和内置消息处理器()
 {
 	/*
 
@@ -104,7 +104,7 @@ void 使用内置WebSocket服务器和内置消息处理器()
 
 #endregion
 
-使用内置WebSocket服务器和内置消息处理器();
+使用内置Http和Websocket服务器和内置消息处理器();
 
 Console.WriteLine("Demo of using SDK has started...");
 
