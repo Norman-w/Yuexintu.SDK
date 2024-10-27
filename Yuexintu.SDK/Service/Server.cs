@@ -73,7 +73,7 @@ public class Server
 	/// 当WebSocket会话被创建时触发,通常你不需要订阅这个事件
 	/// 在业务层,你只需要订阅OnDeviceConnected和OnFaceCaptured事件即可基本完成业务逻辑
 	/// </summary>
-	private event WebSocketSessionCreatedEventHandler? WebSocketSessionCreatedAsync
+	internal event WebSocketSessionCreatedEventHandler? WebSocketSessionCreatedAsync
 	{
 		add => _netFacade.WebSocketSessionCreatedAsync += value;
 		remove => _netFacade.WebSocketSessionCreatedAsync -= value;
@@ -83,7 +83,7 @@ public class Server
 	/// 当WebSocket请求包被接收到时触发,在这里你可以处理全部请求包,属于数据层的事件
 	/// 如果你只关心摄像机连接和捕捉到人脸的事件,进需要订阅OnDeviceConnected和OnFaceCaptured事件
 	/// </summary>
-	public event NetMessageProcessor.WebSocketRequestPackageReceivedEventHandler? OnWebSocketRequestPackageReceived
+	internal event NetMessageProcessor.WebSocketRequestPackageReceivedEventHandler? OnWebSocketRequestPackageReceived
 	{
 		add => _messageProcessor.OnWebSocketRequestPackageReceived += value;
 		remove => _messageProcessor.OnWebSocketRequestPackageReceived -= value;
@@ -93,7 +93,7 @@ public class Server
 	/// 当HTTP请求被接收到时触发,在这里你可以处理全部请求包,属于数据层的事件
 	/// 如果你只关心摄像机连接和捕捉到人脸的事件,进需要订阅OnDeviceConnected和OnFaceCaptured事件
 	/// </summary>
-	public event HttpRequestReceivedEventHandler? OnHttpRequestReceived;
+	internal event HttpRequestReceivedEventHandler? OnHttpRequestReceived;
 
 	/// <summary>
 	/// 当设备连接到服务端时触发,是从摄像机通过WebSocket传送过来的

@@ -51,7 +51,21 @@ void 使用已经存在的WebSocket服务器对象和Sdk服务器()
 	var netFacade = new CustomNetFacade();
 	//注意这里的调用方式,传入一个继承自INetFacade的对象
 	var server = new Server(netFacade);
-	server.OnWebSocketRequestPackageReceived += 处理摄像机发过来的请求包回调函数;
+	
+	// 这个事件已修改,只有在sdk包内可使用internal instance的地方才可以使用.实际使用Server时候,使用业务层的两个事件(OnDeviceConnected,OnFaceCaptured)即可
+	// server.OnWebSocketRequestPackageReceived += 处理摄像机发过来的请求包回调函数;
+	server.OnDeviceConnected += (sender, e) =>
+	{
+		//这是业务层的.
+		Console.WriteLine($"设备连接事件: {e.Sn}");
+	};
+	server.OnFaceCaptured += (sender, e) =>
+	{
+		//这是业务层的.
+		// var imageSize = e.Image.Length;
+		// Console.WriteLine($"人脸抓拍事件: 图片大小: {imageSize},设备SN: {e.Sn}");
+		Console.WriteLine($"人脸抓拍事件: 设备SN: {e.Sn}, 人员ID: {e.KnownPersonId}, 是否已知: {e.IsKnownPerson}", ConsoleColor.Green);
+	};
 	netFacade.Start();
 }
 
