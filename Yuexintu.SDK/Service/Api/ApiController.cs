@@ -31,6 +31,7 @@ public class ApiController : ControllerBase
 			Console.ResetColor();
 			return BadRequest();
 		}
+		Server.Instance?.ReportHttpRequestReceived(request);
 
 		Console.ForegroundColor = ConsoleColor.Cyan;
 		//这个应该是之前的错误的文档,后面实际接收到的请求中,有Pid没有Uuid
@@ -48,6 +49,19 @@ public class ApiController : ControllerBase
 		Console.WriteLine($"返回给摄像机的消息: {response.Code} - {response.Msg}");
 		Console.ResetColor();
 
+
+		#region 传递给回调函数
+		
+		var pid = request.Pid;
+		var name = request.Name;
+		var faceDateBase64 = request.Data.FaceData;
+		var sn = request.Sn;
+
+		Server.Instance?.ReportFaceCaptured(sn, pid, name, faceDateBase64);
+				
+
+		#endregion
+
 		return Ok(response);
 	}
 
@@ -64,6 +78,7 @@ public class ApiController : ControllerBase
 			Code = ErrorCode.Success.Value,
 			Msg = "Ok"
 		};
+		Server.Instance?.ReportHttpRequestReceived(request);
 		return Ok(response);
 	}
 
@@ -99,6 +114,7 @@ public class ApiController : ControllerBase
 				}
 			}
 		};
+		Server.Instance?.ReportHttpRequestReceived(request);
 		return Ok(response);
 	}
 
@@ -122,7 +138,7 @@ public class ApiController : ControllerBase
 			Console.ResetColor();
 			return BadRequest();
 		}
-		 
+		Server.Instance?.ReportHttpRequestReceived(request);
 		Console.ForegroundColor = ConsoleColor.Cyan;
 		Console.WriteLine($"收到告警信息: Type: {request.Type}, 正文: {json}");
 		Console.ResetColor();
@@ -147,6 +163,7 @@ public class ApiController : ControllerBase
 			Code = ErrorCode.Success.Value,
 			Msg = "Ok"
 		};
+		Server.Instance?.ReportHttpRequestReceived(request);
 		return Ok(response);
 	}
 
@@ -187,6 +204,8 @@ public class ApiController : ControllerBase
 			Console.ResetColor();
 			return BadRequest();
 		}
+		
+		Server.Instance?.ReportHttpRequestReceived(request);
 
 		Console.ForegroundColor = ConsoleColor.Cyan;
 		Console.WriteLine($"收到访问记录: SN: {request.Sn},共计{request.Data.Count}条记录");
@@ -237,6 +256,8 @@ public class ApiController : ControllerBase
 			Console.WriteLine($"保存图片到: {fileName}");
 			Console.ResetColor();
 		}
+		//这里调用不了这个方法 因为发过来的就不是request 直接就是base64字符串,所以无法解析到request
+		// Server.Instance?.ReportHttpRequestReceived(request);
 		
 		var response = new Base64ImageResponse();
 		return Ok(response);

@@ -1,10 +1,12 @@
 using System.Reflection;
+using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Yuexintu.SDK.RequestAndResponse.WebSocket;
 
 namespace Yuexintu.SDK.Service;
 
 /// <summary>
+/// TODO 需要考虑把这个类命名为WebSocketMessageProcessor,因为这个类的主要作用就是把WebSocket发来的string消息转换为对象,并调用事件.
 /// 从网络过来的消息的处理器.
 /// 如果SDK内部实现了消息接收器(HTTP/WebSocket服务),那么这个类就是消息处理器.
 /// 处理HTTP请求,WebSocket消息等,将消息转换为SDK内部的消息对象,并调用注册的事件.
@@ -31,8 +33,10 @@ public class NetMessageProcessor
 		return dic;
 	}
 
-	public delegate WebSocketResponsePackage WebSocketRequestPackageReceivedEventHandler(WebSocketRequestPackage iWebSocketRequestPackage);
+	public delegate WebSocketResponsePackage? WebSocketRequestPackageReceivedEventHandler(WebSocketRequestPackage iWebSocketRequestPackage);
+	//TODO 需要重命名
 	public event WebSocketRequestPackageReceivedEventHandler? OnWebSocketRequestPackageReceived;
+	
 
 	/// <summary>
 	/// 处理从http/websocket收到的文本消息,如果消息被正确解析,将会通过OnWebSocketRequestReceived事件传递出去.
@@ -85,15 +89,17 @@ public class NetMessageProcessor
 		instance.SetBody(message);
 		//触发事件
 		var responsePackage = OnWebSocketRequestPackageReceived?.Invoke(instance);
+		if (responsePackage == null)
+		{
+			//回调函数中返回null,则不向客户端发送消息
+			return;
+		}
 		//json 配置,使用小驼峰
 		var settings = new JsonSerializerSettings
 		{
 			ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver()
 		};
 		var responseJson = JsonConvert.SerializeObject(responsePackage, settings);
-		if (responsePackage != null)
-		{
-			returnMessageAction(responseJson);
-		}
+		returnMessageAction(responseJson);
 	}
 }

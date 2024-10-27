@@ -7,13 +7,14 @@
 
 using Yuexintu.SDK.Enum;
 using Yuexintu.SDK.Model;
+using Yuexintu.SDK.Service;
 
 namespace Yuexintu.SDK.RequestAndResponse.Http;
 
 /// <summary>
 /// 车辆抓拍请求模型
 /// </summary>
-public class VehicleCaptureRequest
+public class VehicleCaptureRequest : HttpRequestPackage
 {
 	/// <summary>
 	/// 设备ID

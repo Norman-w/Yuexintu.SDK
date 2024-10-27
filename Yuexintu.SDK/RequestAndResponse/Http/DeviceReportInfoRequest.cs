@@ -6,12 +6,15 @@
 
 
 */
+
+using Yuexintu.SDK.Service;
+
 namespace Yuexintu.SDK.RequestAndResponse.Http;
 
 /// <summary>
 /// 设备信息上报请求模型
 /// </summary>
-public class DeviceReportInfoRequest
+public class DeviceReportInfoRequest : HttpRequestPackage
 {
 	/// <summary>
 	/// 设备ID

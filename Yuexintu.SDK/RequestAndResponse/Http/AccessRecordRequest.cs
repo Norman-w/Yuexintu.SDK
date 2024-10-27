@@ -29,6 +29,9 @@
    
    但解析报错,因为pid的值超出了long的范围,无法转换.改为ulong后,可以正常解析.
  */
+
+using Yuexintu.SDK.Service;
+
 namespace Yuexintu.SDK.RequestAndResponse.Http;
 
 /// <summary>
@@ -36,7 +39,7 @@ namespace Yuexintu.SDK.RequestAndResponse.Http;
 /// 访问记录请求,当摄像机检测到人脸时,会发送这个请求
 /// TODO 待确认是不是只有通过验证的人脸才会发送这个请求
 /// </summary>
-public class AccessRecordRequest
+public class AccessRecordRequest : HttpRequestPackage
 {
 	/// <summary>
 	/// 发送请求的设备序列号(哪个设备检测到了人脸)

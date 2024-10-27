@@ -71,7 +71,35 @@ void 使用内置WebSocket服务器和内置消息处理器()
     */
 
 	var server = new Server(5011);
-	server.OnWebSocketRequestPackageReceived += 处理摄像机发过来的请求包回调函数;
+
+	#region 数据层的,有数据就会推送.
+
+	//也可以不注册这个事件,这个事件就是底层一点,能接收到全部WebSocket的事件.但是这个函数不会接到HTTP的事件,而且不是所有的包类型都有用.
+	// server.OnWebSocketRequestPackageReceived += 处理摄像机发过来的请求包回调函数;
+	
+	// server.OnHttpRequestReceived += (sender, e) =>
+	// {
+	// 	//这是数据层的.
+	// 	Console.WriteLine($"HTTP请求事件: {e.Uri}");
+	// };
+
+	#endregion
+
+	//所以定义了业务层的一些事件,比如 OnDeviceConnected
+	//实际上通常我们也就会用到这两个事件,其他的事件都是底层的.也都用不上.
+	server.OnDeviceConnected += (sender, e) =>
+	{
+		//这是业务层的.
+		Console.WriteLine($"设备连接事件: {e.Sn}");
+	};
+	server.OnFaceCaptured += (sender, e) =>
+	{
+		//这是业务层的.
+		// var imageSize = e.Image.Length;
+		// Console.WriteLine($"人脸抓拍事件: 图片大小: {imageSize},设备SN: {e.Sn}");
+		Console.WriteLine($"人脸抓拍事件: 设备SN: {e.Sn}, 人员ID: {e.KnownPersonId}, 是否已知: {e.IsKnownPerson}", ConsoleColor.Green);
+	};
+	
 	server.Start();
 }
 
