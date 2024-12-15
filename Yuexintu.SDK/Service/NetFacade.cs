@@ -3,6 +3,7 @@ using System.Net.WebSockets;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
@@ -54,8 +55,13 @@ internal class NetFacade : INetFacade
 	{
 		var builder = InitWebApplicationBuilder(_port);
 		using var app = InitWebApplication(builder);
+		
+		app.MapGet("/",
+			() =>
+				"当前服务为人脸识别SDK的HTTP API服务,请使用HTTP API进行访问,或者使用WebSocket进行连接")
+			.RequireCors("AllowAll");
+		
 
-		ConfigRootPathPage(app);
 		
 		ConfigSwagger(app);
 
@@ -63,37 +69,10 @@ internal class NetFacade : INetFacade
 
 		#region 启动服务器
 
-		Console.WriteLine("应用程序启动成功,请使用gRPC客户端访问gRPC服务.");
 		//这里添加正常的其他逻辑.因为本项目是一个控制台应用程序,其他的业务方面的服务应当先启动,然后再启动grpc服务
 		app.Run();
 
 		#endregion
-	}
-
-	/// <summary>
-	/// 配置根路径页面
-	/// </summary>
-	/// <param name="app"></param>
-	private static void ConfigRootPathPage(WebApplication app)
-	{
-		//提示消息:"无效的请求,该服务仅供栎芯图人脸识别摄像头调用,若测试相关接口,请参阅说明文档指定api路径"
-		//如果访问的是https://norman.wang/face-capture-camara/ 则就是访问了这个页面
-		//查找X-Request-Uri头部,把这个头部的值作为根路径,但是MapGet的时候,路径必须写,所以不能是app.MapGet("/",
-		//而是要处理所有的请求,然后判断路径是否是根路径
-		app.Use(async (context, next) =>
-		{
-			var realPath = context.Request.Headers["X-Request-Uri"];
-			//如果访问的是https://norman.wang/face-capture-camara/ 则就是访问了这个页面
-			var isRootPath = string.IsNullOrWhiteSpace(realPath) || realPath == "/";
-			if (isRootPath)
-			{
-				await context.Response.WriteAsync(
-					"无效的请求,该服务仅供栎芯图人脸识别摄像头调用,若测试相关接口,请参阅说明文档指定api路径");
-				return;
-			}
-			
-			await next();
-		});
 	}
 
 	private static WebApplicationBuilder InitWebApplicationBuilder(int port)
@@ -107,10 +86,12 @@ internal class NetFacade : INetFacade
 
 		#region Api controller和swagger
 
+		builder.Services.AddControllers();
 		builder.Services.AddControllers()
 			.AddApplicationPart(typeof(ApiController).Assembly)
 			.AddControllersAsServices();
 		builder.Services.AddEndpointsApiExplorer();
+		// builder.Services.AddSwaggerGen();
 		builder.Services.AddSwaggerGen(
 			c =>
 			{
@@ -134,7 +115,7 @@ internal class NetFacade : INetFacade
 		builder.WebHost.UseKestrel(options =>
 		{
 			options.ListenAnyIP(port,
-				listenOptions => { listenOptions.Protocols = HttpProtocols.Http1AndHttp2AndHttp3; });
+				listenOptions => { listenOptions.Protocols = HttpProtocols.Http1; });
 			// options.ListenAnyIP(App.Setting.GrpcWebPort, listenOptions =>
 			// {
 			// Grpc Web需要使用Http1
@@ -150,8 +131,7 @@ internal class NetFacade : INetFacade
 		{
 			corsPolicyBuilder.AllowAnyOrigin()
 				.AllowAnyMethod()
-				.AllowAnyHeader()
-				.WithExposedHeaders("Grpc-Status", "Grpc-Message", "Grpc-Encoding", "Grpc-Accept-Encoding");
+				.AllowAnyHeader();
 		}));
 
 		#endregion

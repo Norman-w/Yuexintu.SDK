@@ -1,4 +1,10 @@
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OpenApi.Models;
 using Yuexintu.SDK.Service;
+using Yuexintu.SDK.Service.Api;
 
 namespace Yuexintu.DemoOfUsingSdk;
 
@@ -12,6 +18,54 @@ public class CustomNetFacade : INetFacade
 	public void Start()
 	{
 		//假设你有一个开关控制要不要发送事件
+
+		#region 已存在的Http服务器对象
+
+		var builder = WebApplication.CreateBuilder();
+		builder.Services.AddControllers();
+		builder.Services.AddControllers()
+			.AddApplicationPart(typeof(ApiController).Assembly)
+			.AddControllersAsServices();
+		builder.Services.AddEndpointsApiExplorer();
+		builder.Services.AddSwaggerGen(
+			c =>
+			{
+				c.SwaggerDoc(
+					"v1",
+					new OpenApiInfo
+					{
+						Title = "Yuexintu人脸识别SDK HTTP API",
+						Version = "v1"
+					}
+				);
+			}
+		);
+		builder.Services.AddCors(options =>
+		{
+			options.AddPolicy("AllowAll",
+				corsPolicyBuilder =>
+				{
+					corsPolicyBuilder.AllowAnyOrigin()
+						.AllowAnyMethod()
+						.AllowAnyHeader();
+				});
+		});
+		builder.WebHost.UseKestrel(options =>
+		{
+			options.ListenAnyIP(51648,
+				listenOptions => { listenOptions.Protocols = HttpProtocols.Http1; });
+		});
+
+		var app = builder.Build();
+		app.UseSwagger();
+		app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Yuexintu人脸识别SDK HTTP API v1"));
+		app.UseCors("AllowAll");
+		app.UseHttpsRedirection();
+		app.UseAuthorization();
+		app.MapControllers();
+		app.Run();
+
+		#endregion
 	}
 
 	public void Stop()
