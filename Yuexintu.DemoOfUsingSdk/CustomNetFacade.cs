@@ -22,38 +22,28 @@ public class CustomNetFacade : INetFacade
 		#region 已存在的Http服务器对象
 
 		var builder = WebApplication.CreateBuilder();
+		builder.WebHost.UseUrls("http://*:51648");
 		builder.Services.AddControllers();
 		builder.Services.AddControllers()
 			.AddApplicationPart(typeof(ApiController).Assembly)
 			.AddControllersAsServices();
 		builder.Services.AddEndpointsApiExplorer();
-		builder.Services.AddSwaggerGen(
-			c =>
-			{
-				c.SwaggerDoc(
-					"v1",
-					new OpenApiInfo
-					{
-						Title = "Yuexintu人脸识别SDK HTTP API",
-						Version = "v1"
-					}
-				);
-			}
-		);
+		builder.Services.AddSwaggerGen(c =>
+		{
+			c.SwaggerDoc("v1", new OpenApiInfo { Title = "Yuexintu人脸识别SDK HTTP API", Version = "v1" });
+		});
 		builder.Services.AddCors(options =>
 		{
-			options.AddPolicy("AllowAll",
-				corsPolicyBuilder =>
-				{
-					corsPolicyBuilder.AllowAnyOrigin()
-						.AllowAnyMethod()
-						.AllowAnyHeader();
-				});
+			options.AddPolicy("AllowAll", corsPolicyBuilder =>
+			{
+				corsPolicyBuilder.AllowAnyOrigin()
+					.AllowAnyMethod()
+					.AllowAnyHeader();
+			});
 		});
 		builder.WebHost.UseKestrel(options =>
 		{
-			options.ListenAnyIP(51648,
-				listenOptions => { listenOptions.Protocols = HttpProtocols.Http1; });
+			options.ListenAnyIP(51648, listenOptions => { listenOptions.Protocols = HttpProtocols.Http1; });
 		});
 
 		var app = builder.Build();
@@ -63,6 +53,8 @@ public class CustomNetFacade : INetFacade
 		app.UseHttpsRedirection();
 		app.UseAuthorization();
 		app.MapControllers();
+
+		app.MapGet("/", () => "这是Yuexintu人脸识别SDK的HTTP API服务");
 		app.Run();
 
 		#endregion
