@@ -262,7 +262,27 @@ public class ApiController : ControllerBase
 		var response = new Base64ImageResponse();
 		return Ok(response);
 	}
+	
+	/// <summary>
+	/// 获取服务器时间
+	/// </summary>
+	/// <returns></returns>
+	[HttpGet("v1/server/time")]
+	public IActionResult GetServerTime()
+	{
+		var response = new ServerTimeResponse
+		{
+			Code = ErrorCode.Success.Value,
+			Msg = "Ok",
+			Data = new ServerTimeResponse.ServerTimeData
+			{
+				Time = DateTime.Now
+			}
+		};
+		return Ok(response);
+	}
 }
+
 public class Base64ImageResponse
 {
 }
