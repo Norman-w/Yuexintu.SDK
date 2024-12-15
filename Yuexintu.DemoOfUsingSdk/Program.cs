@@ -107,7 +107,7 @@ void 使用内置Http和Websocket服务器和内置消息处理器()
 
     */
 
-	var server = new Server(5011);
+	var server = new Server(51648);
 
 	server.OnDeviceConnected += (sender, e) =>
 	{
