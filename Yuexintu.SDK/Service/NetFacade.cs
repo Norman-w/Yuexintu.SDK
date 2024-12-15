@@ -76,10 +76,24 @@ internal class NetFacade : INetFacade
 	/// <param name="app"></param>
 	private static void ConfigRootPathPage(WebApplication app)
 	{
-		app.MapGet("/",
-			context => context.Response.WriteAsync(
-				"无效的请求,该服务仅供栎芯图人脸识别摄像头调用,若测试相关接口,请参阅说明文档指定api路径"
-			));
+		//提示消息:"无效的请求,该服务仅供栎芯图人脸识别摄像头调用,若测试相关接口,请参阅说明文档指定api路径"
+		//如果访问的是https://norman.wang/face-capture-camara/ 则就是访问了这个页面
+		//查找X-Request-Uri头部,把这个头部的值作为根路径,但是MapGet的时候,路径必须写,所以不能是app.MapGet("/",
+		//而是要处理所有的请求,然后判断路径是否是根路径
+		app.Use(async (context, next) =>
+		{
+			var realPath = context.Request.Headers["X-Request-Uri"];
+			//如果访问的是https://norman.wang/face-capture-camara/ 则就是访问了这个页面
+			var isRootPath = string.IsNullOrWhiteSpace(realPath) || realPath == "/";
+			if (isRootPath)
+			{
+				await context.Response.WriteAsync(
+					"无效的请求,该服务仅供栎芯图人脸识别摄像头调用,若测试相关接口,请参阅说明文档指定api路径");
+				return;
+			}
+			
+			await next();
+		});
 	}
 
 	private static WebApplicationBuilder InitWebApplicationBuilder(int port)
