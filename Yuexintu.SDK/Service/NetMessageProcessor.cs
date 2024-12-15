@@ -39,7 +39,7 @@ public class NetMessageProcessor
 	
 
 	/// <summary>
-	/// 处理从http/websocket收到的文本消息,如果消息被正确解析,将会通过OnWebSocketRequestReceived事件传递出去.
+	/// 处理从http/websocket收到的文本消息,如果消息被正确解析,将会通过OnWebSocketRequestPackageReceived事件传递出去.
 	/// </summary>
 	/// <param name="message"></param>
 	/// <param name="returnMessageAction">当需要给客户端返回消息时,调用这个委托</param>

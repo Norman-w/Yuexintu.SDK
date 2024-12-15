@@ -21,9 +21,32 @@ Console.WriteLine("Demo of using SDK is starting...");
 
 void 单独使用消息处理器对象消息由外部提供()
 {
+	#region 初始化
 	var netMessageProcessor = new NetMessageProcessor();
 	netMessageProcessor.OnWebSocketRequestPackageReceived += 处理摄像机发过来的请求包回调函数;
-
+	#endregion
+	
+	
+	#region 模拟消息处理
+	//比如这是从Controller Request中获取的消息
+	const string mockUpMessage = "{\"uri\":\"/connect\",\"msgId\":\"1234567890\",\"data\":{\"param\":{\"did\":\"1234567890\",\"sn\":\"1234567890\"}}}";
+	//处理这条消息,如果消息正确处理了,则会触发上面注册的事件,回调"处理摄像机发过来的请求包回调函数"
+	
+	//比如这里触发一个异步等待机制,等待处理完毕
+	//var task = Task.Run(() => netMessageProcessor.ProcessMessage(mockUpMessage, response => { }));
+	//task.Wait();
+	//或者直接调用(不需要回发消息的话适用)
+	netMessageProcessor.ProcessMessage(mockUpMessage, response =>
+	{
+		//这里的response是 处理摄像机发过来的请求包回调函数 返回的值, 我们需要在下面通过消息通道将这个值回发给摄像机
+		//比如你从http获取到的消息,那这里就是给http的request的response
+		Console.WriteLine($"回发消息: {response}");
+		//比如Controller获取到消息的地方要Response.Write(response);
+		//执行完毕,这里可以释放等待机
+	});
+	//task结束后,可以继续执行其他操作
+	#endregion
+	
 	/*NOTE
 	若是
 	需要处理字符串消息(由任何地方获得),调用 netMessageProcessor.ProcessMessage(字符串消息, 回发消息回调函数);
