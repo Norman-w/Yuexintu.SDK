@@ -54,6 +54,9 @@ internal class NetFacade : INetFacade
 	{
 		var builder = InitWebApplicationBuilder(_port);
 		using var app = InitWebApplication(builder);
+
+		ConfigRootPathPage(app);
+		
 		ConfigSwagger(app);
 
 		ConfigWebsocket(app);
@@ -65,6 +68,18 @@ internal class NetFacade : INetFacade
 		app.Run();
 
 		#endregion
+	}
+
+	/// <summary>
+	/// 配置根路径页面
+	/// </summary>
+	/// <param name="app"></param>
+	private static void ConfigRootPathPage(WebApplication app)
+	{
+		app.MapGet("/",
+			context => context.Response.WriteAsync(
+				"无效的请求,该服务仅供栎芯图人脸识别摄像头调用,若测试相关接口,请参阅说明文档指定api路径"
+			));
 	}
 
 	private static WebApplicationBuilder InitWebApplicationBuilder(int port)
