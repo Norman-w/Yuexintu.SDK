@@ -128,8 +128,8 @@ void 使用内置Http和Websocket服务器和内置消息处理器()
 
 #endregion
 
-使用已经存在的含WebSocket功能的Http服务器对象和Sdk服务器();
-// 使用内置Http和Websocket服务器和内置消息处理器();
+// 使用已经存在的含WebSocket功能的Http服务器对象和Sdk服务器();
+使用内置Http和Websocket服务器和内置消息处理器();
 
 Console.WriteLine("Demo of using SDK has started...");
 
