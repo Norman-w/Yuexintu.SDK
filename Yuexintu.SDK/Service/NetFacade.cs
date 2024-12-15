@@ -158,7 +158,18 @@ internal class NetFacade : INetFacade
 	{
 		#region swagger
 
-		app.UseSwagger();
+		app.UseSwagger(options =>
+		{
+			options.PreSerializeFilters.Add((swagger, httpReq) =>
+			{
+				if (!httpReq.Headers.ContainsKey("X-Request-Uri")) return;
+				var index = httpReq.Headers["X-Request-Uri"].ToString()
+					.IndexOf("/swagger/", StringComparison.Ordinal);
+				if (index <= 0) return;
+				var serverUrl = $"{httpReq.Headers["X-Request-Uri"].ToString()[..index]}/";
+				swagger.Servers = new List<OpenApiServer> { new() { Url = serverUrl } };
+			});
+		});
 
 		app.UseSwaggerUI();
 
