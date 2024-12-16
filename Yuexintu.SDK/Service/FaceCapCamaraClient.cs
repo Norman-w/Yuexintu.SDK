@@ -13,7 +13,7 @@ using System.Text;
 
 namespace Yuexintu.SDK.Service;
 
-public class FaceCapCamaraClient : IClient
+public class FaceCapCameraClient : IClient
 {
 	public event ClientDisconnectedEventHandler? ClientDisconnected;
 
@@ -21,13 +21,13 @@ public class FaceCapCamaraClient : IClient
 	public readonly string Id;
 	private readonly WebSocket _webSocket;
 
-	public static FaceCapCamaraClient FromSession(SessionCreatedEventArgs session)
+	public static FaceCapCameraClient FromSession(SessionCreatedEventArgs session)
 	{
-		return new FaceCapCamaraClient(session);
+		return new FaceCapCameraClient(session);
 	}
 
 
-	public FaceCapCamaraClient(SessionCreatedEventArgs sessionCreatedEventArgs)
+	public FaceCapCameraClient(SessionCreatedEventArgs sessionCreatedEventArgs)
 	{
 		Id = sessionCreatedEventArgs.SessionId;
 		_webSocket = sessionCreatedEventArgs.Connection as WebSocket;
@@ -107,7 +107,7 @@ public class FaceCapCamaraClient : IClient
 		// 	Console.WriteLine($"解析日志失败:{e}");
 		// }
 	}
-	public delegate void RequestMessageReceivedEventHandler(FaceCapCamaraClient sender, string message);
+	public delegate void RequestMessageReceivedEventHandler(FaceCapCameraClient sender, string message);
 	public event RequestMessageReceivedEventHandler? OnRequestMessageReceived;
 
 	public void Send(string message)

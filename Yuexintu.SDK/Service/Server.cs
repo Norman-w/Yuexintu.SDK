@@ -25,7 +25,7 @@ public class Server
 	{
 		_netFacade.WebSocketSessionCreatedAsync += async session =>
 		{
-			var client = FaceCapCamaraClient.FromSession(session);
+			var client = FaceCapCameraClient.FromSession(session);
 			client.OnRequestMessageReceived += (sender, message) =>
 			{
 				_messageProcessor.ProcessMessage(message,

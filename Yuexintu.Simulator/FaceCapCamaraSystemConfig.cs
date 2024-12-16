@@ -2,7 +2,7 @@ using System.Text;
 
 namespace Yuexintu.Simulator;
 
-public class FaceCapCamaraSystemConfig
+public class FaceCapCameraSystemConfig
 {
 	#region 摄像机页面中设置
 
@@ -62,7 +62,7 @@ public class FaceCapCamaraSystemConfig
 		return sb.ToString();
 	}
 
-	private static List<FaceCapCamaraSystemConfig> MockFaceCapCamaraSystemConfigs()
+	private static List<FaceCapCameraSystemConfig> MockFaceCapCameraSystemConfigs()
 	{
 		#region 服务器地址列表
 
@@ -87,7 +87,7 @@ public class FaceCapCamaraSystemConfig
 		#endregion
 
 		var random = new Random();
-		return new List<FaceCapCamaraSystemConfig>
+		return new List<FaceCapCameraSystemConfig>
 		{
 			new()
 			{
@@ -97,10 +97,10 @@ public class FaceCapCamaraSystemConfig
 		};
 	}
 	
-	public static FaceCapCamaraSystemConfig MockFaceCapCamaraSystemConfig()
+	public static FaceCapCameraSystemConfig MockFaceCapCameraSystemConfig()
 	{
 		var random = new Random();
-		var configs = MockFaceCapCamaraSystemConfigs();
+		var configs = MockFaceCapCameraSystemConfigs();
 		return configs[random.Next(configs.Count)];
 	}
 }

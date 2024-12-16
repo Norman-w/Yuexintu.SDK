@@ -23,7 +23,7 @@ namespace Yuexintu.Simulator;
 internal static class Program
 {
 	private static PersonInformationArchive? _personInformationArchive;
-	private static FaceCapCamaraSystemConfig? _faceCapCamaraSystemConfig;
+	private static FaceCapCameraSystemConfig? _faceCapCameraSystemConfig;
 
 	public static void Main(string[] args)
 	{
@@ -40,13 +40,13 @@ internal static class Program
 		Console.WriteLine("摄像机系统启动中...");
 		Console.WriteLine("加载摄像机系统设置中...");
 //随机读取预先准备好的多个系统镜像,包括 HTTP,WebSocket服务器地址信息,心跳间隔,Token有效时间等设置.
-// var faceCapCamaraSystemConfig = FaceCapCamaraSystemConfig.MockFaceCapCamaraSystemConfig();
-		_faceCapCamaraSystemConfig = new FaceCapCamaraSystemConfig
+// var faceCapCameraSystemConfig = FaceCapCameraSystemConfig.MockFaceCapCameraSystemConfig();
+		_faceCapCameraSystemConfig = new FaceCapCameraSystemConfig
 		{
 			HttpServerUrl = "http://localhost:5011",
 			WebSocketServerUrl = "ws://localhost:5011/ws",
 		};
-		Console.WriteLine($"摄像机系统配置信息: {_faceCapCamaraSystemConfig}");
+		Console.WriteLine($"摄像机系统配置信息: {_faceCapCameraSystemConfig}");
 
 //加载摄像机闪存,读取人员库(不是人脸库)
 		Console.WriteLine("加载摄像机人员库中...");
@@ -92,7 +92,7 @@ internal static class Program
 				//进入loop
 
 				//通过WebSocket连接服务器
-				if (await ConnectWebSocketServer(webSocket, _faceCapCamaraSystemConfig, sn)) continue;
+				if (await ConnectWebSocketServer(webSocket, _faceCapCameraSystemConfig, sn)) continue;
 				break;
 			}
 
@@ -160,14 +160,14 @@ internal static class Program
 	}
 
 	private static async Task<bool> ConnectWebSocketServer(ClientWebSocket clientWebSocket,
-		FaceCapCamaraSystemConfig? faceCapCamaraSystemConfig, string s)
+		FaceCapCameraSystemConfig? faceCapCameraSystemConfig, string s)
 	{
 		Console.WriteLine("摄像机连接WebSocket服务器中...");
 		//初始化WebSocket连接
 		try
 		{
-			if (faceCapCamaraSystemConfig?.WebSocketServerUrl != null)
-				await clientWebSocket.ConnectAsync(new Uri(faceCapCamaraSystemConfig.WebSocketServerUrl),
+			if (faceCapCameraSystemConfig?.WebSocketServerUrl != null)
+				await clientWebSocket.ConnectAsync(new Uri(faceCapCameraSystemConfig.WebSocketServerUrl),
 					CancellationToken.None);
 			else throw new Exception("WebSocketServerUrl is null");
 		}
@@ -255,8 +255,8 @@ internal static class Program
 		Console.ForegroundColor = ConsoleColor.Magenta;
 		Console.WriteLine($"摄像机获取Token成功,Token: {deviceConnectionResponsePackage.Data.Result.Token}");
 		Console.ResetColor();
-		faceCapCamaraSystemConfig.TokenAwardFromServer =
-			new FaceCapCamaraSystemConfig.TokenModel(faceCapCamaraSystemConfig.HttpServerUrl)
+		faceCapCameraSystemConfig.TokenAwardFromServer =
+			new FaceCapCameraSystemConfig.TokenModel(faceCapCameraSystemConfig.HttpServerUrl)
 			{
 				Token = deviceConnectionResponsePackage.Data.Result.Token,
 				Expire = deviceConnectionResponsePackage.Data.Result.Expire,
@@ -422,12 +422,12 @@ internal static class Program
 			var response = string.Empty;
 			try
 			{
-				if (_faceCapCamaraSystemConfig?.HttpServerUrl != null)
+				if (_faceCapCameraSystemConfig?.HttpServerUrl != null)
 					response = await HttpHelper.PostAsync(
-						_faceCapCamaraSystemConfig.HttpServerUrl,
+						_faceCapCameraSystemConfig.HttpServerUrl,
 						"/api/v1/adapter/lenfocus/face/capture",
 						faceRecognitionRequestJsonBytes, header,
-						$"Bearer {_faceCapCamaraSystemConfig.TokenAwardFromServer.Token}"
+						$"Bearer {_faceCapCameraSystemConfig.TokenAwardFromServer.Token}"
 					);
 				else throw new Exception("HttpServerUrl is null");
 			}
