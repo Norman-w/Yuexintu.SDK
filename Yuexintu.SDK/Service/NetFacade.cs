@@ -165,6 +165,9 @@ internal class NetFacade : INetFacade
 
 	private static void ConfigSwagger(WebApplication app)
 	{
+		//TODO 需要将此硬编码改为从设置或环境变量等获取
+		//部署在https://norman.wang/face-capture-camera,则需要设置BasePath
+		app.UsePathBase("/face-capture-camera");
 		#region swagger
 
 		app.UseSwagger(options =>
@@ -208,12 +211,11 @@ internal class NetFacade : INetFacade
 				KeepAliveInterval = TimeSpan.FromSeconds(120),
 			});
 		// 添加WebSocket中间件
-		app.Map("/ws", async (context) =>
+		app.Map("/face-capture-camera/", async (context) =>
 		{
 			if (context.WebSockets.IsWebSocketRequest)
 			{
-				//如果访问位置是CampLauncher等支持的,则添加SubProtocol
-				if (context.Request.Path == "/ws/")
+				if (context.Request.Path == "/face-capture-camera/")
 				{
 					// var subProtocol = context.Request.Headers["Sec-WebSocket-Protocol"];
 					// if (subProtocol.Count > 0)
