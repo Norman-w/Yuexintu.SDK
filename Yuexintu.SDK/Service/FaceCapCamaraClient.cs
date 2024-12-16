@@ -59,7 +59,7 @@ public class FaceCapCameraClient : IClient
 		}
 		catch (Exception e)
 		{
-			// Console.WriteLine("读取客户端消息失败,错误信息:" + e.Message);
+			Console.WriteLine("读取客户端消息失败,错误信息:" + e.Message);
 		}
 		finally
 		{
