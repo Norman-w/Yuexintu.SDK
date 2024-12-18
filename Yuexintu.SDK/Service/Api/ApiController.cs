@@ -140,7 +140,8 @@ public class ApiController : ControllerBase
 		}
 		Server.Instance?.ReportHttpRequestReceived(request);
 		Console.ForegroundColor = ConsoleColor.Cyan;
-		Console.WriteLine($"收到告警信息: Type: {request.Type}, 正文: {json}");
+		//如果正文json超过一定长度,只显示前面一部分,后面还显示总长度
+		Console.WriteLine($"收到告警信息: Type: {request.Type}, 正文: {(json.Length > 100 ? json[..100] : json)}, 内容长度: {json.Length}");
 		Console.ResetColor();
 		var response = new EventReportResponse
 		{
